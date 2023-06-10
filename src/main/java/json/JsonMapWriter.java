@@ -17,13 +17,15 @@ public class JsonMapWriter<K, V> implements JsonDataStructUtility<Map.Entry<K, V
 
     private int indent;
 
-    public JsonMapWriter(Map<K, V> map,
-                         Writer writer,
-                         int indent) {
+    public JsonMapWriter(
+            Map<K, V> map,
+            Writer writer,
+            int indent) {
         this.map = map;
         this.writer = writer;
         this.indent = indent;
     }
+
     @Override
     public String getStartingBrace() {
         return startingBrace;

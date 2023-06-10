@@ -5,8 +5,8 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Map;
 
-public class JsonMapOfCollectionsWriter<A, B, X extends Collection<B>> implements
-    JsonDataStructUtility<Map.Entry<A, X>> {
+public class JsonMapOfCollectionsWriter<A, B, X extends Collection<B>>
+        implements JsonDataStructUtility<Map.Entry<A, X>> {
 
     private String startingBrace = "{";
 
@@ -18,9 +18,10 @@ public class JsonMapOfCollectionsWriter<A, B, X extends Collection<B>> implement
 
     private int indent;
 
-    public JsonMapOfCollectionsWriter(Map<A, X> mapOFCollections,
-                               Writer writer,
-                               int indent) {
+    public JsonMapOfCollectionsWriter(
+            Map<A, X> mapOFCollections,
+            Writer writer,
+            int indent) {
         this.mapOFCollections = mapOFCollections;
         this.writer = writer;
         this.indent = indent;

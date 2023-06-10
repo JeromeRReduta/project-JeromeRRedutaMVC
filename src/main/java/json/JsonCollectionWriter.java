@@ -13,9 +13,10 @@ public class JsonCollectionWriter<E> implements JsonDataStructUtility<E> {
 
     private int indent;
 
-    public JsonCollectionWriter(Collection<E> collection,
-                                Writer writer,
-                                int indent) {
+    public JsonCollectionWriter(
+            Collection<E> collection,
+            Writer writer,
+            int indent) {
         this.collection = collection;
         this.writer = writer;
         this.indent = indent;

@@ -38,8 +38,7 @@ public interface JsonDataStructUtility<E> {
     /** writes all given elements through the writer */
     default void writeAllElements(Iterable<E> iterable) throws IOException {
         Writer writer = getWriter();
-        var it = iterable
-        		.iterator();
+        var it = iterable.iterator();
         String startingBrace = getStartingBrace();
         String endingBrace = getEndingBrace();
 
