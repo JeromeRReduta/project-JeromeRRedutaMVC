@@ -1,46 +1,69 @@
 package configurations;
 
+import text_finding.TextSourceFinder;
+import text_finding.TextFileFinder;
 import java.nio.file.Path;
 
 import argument_parsing.ArgumentMap;
 import argument_parsing.CommandLineReader;
+import text_stemming.TextStemmer;
+import text_stemming.TextFileStemmer;
+import stem_reading.StemReader;
+import stem_reading.TextFileStemReader;
+import data.InvertedIndex;
+import data.SimpleInvertedIndex;
 
 public class Project1Config extends Config {
+	
+	/* TODO:
+	 * 1. Finish SimpleInvertedIndex
+	 * 2. InvertedIndexView
+	 * 3. TextFileInvertedIndexView
+	 * 4. Test in Driver
+	 * 5. TextFileInvertedIndexController
+	 * 6. SimpleInvertedIndexController
+	 * 7. Test in Driver
+	 * 8. App (abstract class)
+	 * 9. Project1App
+	 * 10. Run tests
+	 * 11. Debug & retest
+	 * 12. Done!
+	 */
 	
 	public final Path sourceFile;
 	
 	public final Path outputFile;
 	
-//	public final InvertedIndex invertedIndex;
-//	
+	public final InvertedIndex invertedIndex;
+	
 //	public final InvertedIndexView invertedIndexView;
 //	
 //	public final InvertedIndexController invertedIndexController;
-//	
-//	public final TextFinder textFinder;
-//	
-//	public final TextStemmer textStemmer;
-//	
-//	public final StemReader stemReader;
+	
+	public final TextSourceFinder<Path> textFinder;
+	
+	public final TextStemmer<Path> textStemmer;
+	
+	public final StemReader<Path> stemReader;
 	
 	private Project1Config(
 			Path sourceFile,
-			Path outputFile //,
-//			InvertedIndex invertedIndex,
+			Path outputFile,
+			InvertedIndex invertedIndex,
 //			InvertedIndexView invertedIndexView,
 //			InvertedIndexController invertedIndexController,
-//			TextFinder textFinder,
-//			TextStemmer textStemmer,
-//			StemReader stemReader
+			TextSourceFinder<Path> textFinder,
+			TextStemmer<Path> textStemmer,
+			StemReader<Path> stemReader
 			) {
 		this.sourceFile = sourceFile;
 		this.outputFile = outputFile;
-//		this.invertedIndex = invertedIndex;
+		this.invertedIndex = invertedIndex;
 //		this.invertedIndexView = invertedIndexView;
 //		this.invertedIndexController = invertedIndexController;
-//		this.textFinder = textFinder;
-//		this.textStemmer = textStemmer;
-//		this.stemReader = stemReader;
+		this.textFinder = textFinder;
+		this.textStemmer = textStemmer;
+		this.stemReader = stemReader;
 	}
 	
 	@Override
@@ -52,70 +75,51 @@ public class Project1Config extends Config {
 				 * 
 				 */
 				
-				sourceFile.toString(),
+				sourceFile,
 				outputFile);
 	}
 	
 
 	public static class Factory {
 		
+		/** Statically assigned vars and dependencies - we choose these implementations because I said so */
 		private final static String sourceFlag = "-path";
 		private final static String outputFlag = "-index";
-		
 		private final static Path defaultOutputFile = Path.of("index.json");
-		
-		/** Statically assigned dependencies - we choose these implementations because I said so */
-		/** TODO: Move all statically defined implementations up here,
-		 * 
-		 * e.g. private final static InvertedIndex index = new SimpleInvertedIndex();
-		 */
+		private final static TextStemmer<Path> stemmer = new TextFileStemmer();
+		private final static InvertedIndex index = new SimpleInvertedIndex();
 
-		
-		
 		/**
-		 * Sets the following configs:
-		 * source file, 
-		 * output file, 
-		 * stemReader,
-		 * TextFinder,
-		 * TextStemmer,
-		 * InvertedIndex, 
-		 * InvertedIndexView, 
-		 * InvertedIndexController,
+		 * Sets up the configs. This should be the only way to create a new Project1Config.
 		 * 
-		 * @param args
-		 * @return
+		 * @param args commandline args
+		 * @return a Project1Config
 		 */
 		public static Project1Config createFromArgs(String[] args) {
 			CommandLineReader argMap = new ArgumentMap(args);
 			Path sourceFile = argMap.getPath(sourceFlag, null);
 			Path outputFile = argMap.getPath(outputFlag, defaultOutputFile);
-			
-//			InvertedIndex index = new SimpleInvertedIndex();
 //			InvertedIndexView view = new TextFileInvertedIndexView(
 //					index,
 //					outputFile);
 //			InvertedIndexController controller = new TextFileInvertedIndexController(
 //					index,
 //					view);
-//			
-//			TextFinder finder = new TextFileFinder();
-//			TextStemmer stemmer = new TextFileStemmer();
-//			StemReader reader = new TextFileStemReader(
-//					finder,
-//					stemmer);
-//			
+			TextSourceFinder<Path> finder = new TextFileFinder(sourceFile);
+			StemReader<Path> reader = new TextFileStemReader(
+					index,
+					finder,
+					stemmer);
 			return new Project1Config(
 					sourceFile,
-					outputFile //,
-//					index,
+					outputFile,
+					index,
 //					view,
 //					controller,
-//					finder,
-//					stemmer,
-//					reader
+					finder,
+					stemmer,
+					reader
 					);
-			
 		}
 	}
 	
