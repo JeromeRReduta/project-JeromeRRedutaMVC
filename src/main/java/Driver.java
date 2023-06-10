@@ -1,5 +1,8 @@
+import configurations.Config;
 import java.time.Duration;
 import java.time.Instant;
+
+import configurations.Project1Config;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -22,8 +25,8 @@ public class Driver {
 		// store initial start time
 		Instant start = Instant.now();
 
-		// TODO Fill in and modify as needed
-
+		Config config = Project1Config.Factory.createFromArgs(new String[] {"-path", "a.txt"});
+		System.out.println(config);
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
