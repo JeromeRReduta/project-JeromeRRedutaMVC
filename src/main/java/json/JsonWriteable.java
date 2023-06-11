@@ -6,14 +6,12 @@ import java.io.Writer;
 /**
  * An object that can write its internal contents in a JSON format
  * @author JRRed
- *
- * @param <K> type of whatever element this object prints
  */
-public interface JsonWriteable<K> {
+public interface JsonWriteable {
 	
 	/**
-	 * Writes the object's JSON representation
+	 * Writes object's own data as JSON representation
 	 */
-	void writeToJson(K element, Writer writer, int baseIndent) throws IOException;
+	void writeToJson(Writer writer, int baseIndent) throws IOException;
 
 }

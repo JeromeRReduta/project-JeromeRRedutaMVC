@@ -1,6 +1,8 @@
 package configurations;
 
 import text_finding.TextSourceFinder;
+import views.DataToTextFileView;
+import views.InvertedIndexView;
 import text_finding.TextFileFinder;
 import java.nio.file.Path;
 
@@ -17,8 +19,8 @@ public class Project1Config extends Config {
 	
 	/* TODO:
 	 * 1. Finish SimpleInvertedIndex
-	 * 2. InvertedIndexView
-	 * 3. TextFileInvertedIndexView
+	 * 2. InvertedIndexView (done - changed to dataToTextFileView)
+	 * 3. TextFileInvertedIndexView (done - changed to InvertedIndexView)
 	 * 4. Test in Driver
 	 * 5. TextFileInvertedIndexController
 	 * 6. SimpleInvertedIndexController
@@ -36,7 +38,7 @@ public class Project1Config extends Config {
 	
 	public final InvertedIndex invertedIndex;
 	
-//	public final InvertedIndexView invertedIndexView;
+	public final DataToTextFileView invertedIndexView;
 //	
 //	public final InvertedIndexController invertedIndexController;
 	
@@ -50,7 +52,7 @@ public class Project1Config extends Config {
 			Path sourceFile,
 			Path outputFile,
 			InvertedIndex invertedIndex,
-//			InvertedIndexView invertedIndexView,
+			DataToTextFileView invertedIndexView,
 //			InvertedIndexController invertedIndexController,
 			TextSourceFinder<Path> textFinder,
 			TextStemmer<Path> textStemmer,
@@ -59,7 +61,7 @@ public class Project1Config extends Config {
 		this.sourceFile = sourceFile;
 		this.outputFile = outputFile;
 		this.invertedIndex = invertedIndex;
-//		this.invertedIndexView = invertedIndexView;
+		this.invertedIndexView = invertedIndexView;
 //		this.invertedIndexController = invertedIndexController;
 		this.textFinder = textFinder;
 		this.textStemmer = textStemmer;
@@ -99,9 +101,9 @@ public class Project1Config extends Config {
 			CommandLineReader argMap = new ArgumentMap(args);
 			Path sourceFile = argMap.getPath(sourceFlag, null);
 			Path outputFile = argMap.getPath(outputFlag, defaultOutputFile);
-//			InvertedIndexView view = new TextFileInvertedIndexView(
-//					index,
-//					outputFile);
+			DataToTextFileView view = new InvertedIndexView(
+					index,
+					outputFile);
 //			InvertedIndexController controller = new TextFileInvertedIndexController(
 //					index,
 //					view);
@@ -114,7 +116,7 @@ public class Project1Config extends Config {
 					sourceFile,
 					outputFile,
 					index,
-//					view,
+					view,
 //					controller,
 					finder,
 					stemmer,

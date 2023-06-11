@@ -31,7 +31,7 @@ public class SimpleInvertedIndex
 	
 
 	@Override
-	public void writeToJson(InvertedIndex element, Writer writer, int baseIndent) throws IOException {
+	public void writeToJson(Writer writer, int baseIndent) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -43,7 +43,7 @@ public class SimpleInvertedIndex
 	
 	class FileNamePositionMap
 		extends TreeMap<String, data.SimpleInvertedIndex.FileNamePositionMap.StemPositionList>
-		implements JsonWriteable<FileNamePositionMap>, Cloneable {
+		implements JsonWriteable, Cloneable {
 		
 		/**
 		 * Unused
@@ -59,11 +59,7 @@ public class SimpleInvertedIndex
 			return super.get(fileName).clone();
 		}
 
-		@Override
-		public void writeToJson(FileNamePositionMap element, Writer writer, int baseIndent) throws IOException {
-			// TODO Auto-generated method stub
-			
-		}
+	
 		
 		
 		@Override
@@ -73,13 +69,9 @@ public class SimpleInvertedIndex
 		
 		class StemPositionList
 			extends TreeSet<Integer>
-			implements JsonWriteable<StemPositionList>, Cloneable {
+			implements JsonWriteable, Cloneable {
 
-			@Override
-			public void writeToJson(StemPositionList element, Writer writer, int baseIndent) throws IOException {
-				// TODO Auto-generated method stub
-				
-			}
+
 			
 			@Override
 			public StemPositionList clone() {

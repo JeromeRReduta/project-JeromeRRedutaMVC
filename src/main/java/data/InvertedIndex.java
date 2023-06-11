@@ -39,7 +39,7 @@ import json.JsonWriteable;
  * }
  */
 public interface InvertedIndex extends
-	JsonWriteable<InvertedIndex>,
+	JsonWriteable,
 	Cloneable {
 	
 	/**
