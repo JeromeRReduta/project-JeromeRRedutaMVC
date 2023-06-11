@@ -31,14 +31,14 @@ public class TextFileStemReader implements StemReader<Path> {
 		for (String stem : stems) {
 			index.add(
 					stem,
-					source.getFileName().toString(),
+					source.toString(),
 					position);
 			position++;
 		}
 	}
 
 	@Override
-	public Collection<Path> getTextSources() {
+	public Collection<Path> getTextSources() throws NullPointerException {
 		return finder.getTextSources();
 	}
 }

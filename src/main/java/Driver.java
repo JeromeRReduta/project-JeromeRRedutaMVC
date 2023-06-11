@@ -1,12 +1,21 @@
 import configurations.Config;
+
 import data.InvertedIndex;
 import data.SimpleInvertedIndex;
+import stem_reading.StemReader;
+import stem_reading.TextFileStemReader;
+import text_finding.TextFileFinder;
+import text_stemming.TextFileStemmer;
+import views.InvertedIndexView;
+import argument_parsing.ArgumentMap;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 import configurations.Project1Config;
 
@@ -30,11 +39,25 @@ public class Driver {
 	public static void main(String[] args) {
 		// store initial start time
 		Instant start = Instant.now();
-
-		InvertedIndex index = new SimpleInvertedIndex();
-		index.add("a",  "b.txt", 1);
-		index.add("z",  "other.txt", 1);
-		System.out.println(index);
+		try {
+			ArgumentMap map = new ArgumentMap(args);
+			InvertedIndex index = new SimpleInvertedIndex();
+			StemReader<Path> reader = new TextFileStemReader(
+					index,
+					new TextFileFinder(map.getPath("-text", null)),
+					new TextFileStemmer());
+			reader.readIntoInvertedIndex();
+			InvertedIndexView view = new InvertedIndexView(
+					index,
+					map.getPath("-index", Path.of("index.json")));
+			if (map.containsFlag("-index")) {
+				view.writeToFile();
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			
+		}
 		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());

@@ -29,6 +29,7 @@ public interface DataToTextFileView {
 					0);
 		}
 		catch (IOException e) {
+			e.printStackTrace();
 			return;
 		}
 		catch (Exception e) {

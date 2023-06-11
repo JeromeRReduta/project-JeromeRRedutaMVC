@@ -109,5 +109,15 @@ public class ArgumentMap
 			return defaultValue;
 		}
 	}
+	
+	@Override
+	public boolean hasNonNullValue(String flag) {
+		return super.get(flag) != null;
+	}
+	
+	@Override
+	public boolean containsFlag(String flag) {
+		return super.containsKey(flag);
+	}
 
 }

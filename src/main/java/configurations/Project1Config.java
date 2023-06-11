@@ -29,6 +29,19 @@ public class Project1Config extends Config {
 	 * 6. Project1Config and Factory, ConfigWriter
 	 * 7. Test in Driver
 	 * 8. App (abstract class)
+	 * 		EXCEPTION HANDLING - find the highest-possible level abstraction and have it deal w/ any exceptions that get thrown
+	 * 		It's probably App's responsibility - in that case, write down new App.run() with exception handling <-- do below option instead
+	 * 		OR:
+	 * 			Instead of just throwing exceptions, null check input for each method in App, e.g.: <-- do this, not exception handling
+	 * 				populateIndex():
+	 * 					if inputFile == null:
+	 * 						return
+	 * 					
+	 * 				writeToFile():
+	 * 					if outputFile == null;
+	 * 						return
+	 * 					if !shouldOutput:
+	 * 						return
 	 * 9. Project1App
 	 * 10. Run tests
 	 * 11. Debug & retest
@@ -38,6 +51,8 @@ public class Project1Config extends Config {
 	public final Path sourceFile;
 	
 	public final Path outputFile;
+	
+	public final boolean shouldProduceOutputFile;
 	
 	public final InvertedIndex invertedIndex;
 	
@@ -54,6 +69,7 @@ public class Project1Config extends Config {
 	private Project1Config(
 			Path sourceFile,
 			Path outputFile,
+			boolean shouldProduceOutputFile,
 			InvertedIndex invertedIndex,
 			DataToTextFileView invertedIndexView,
 //			InvertedIndexController invertedIndexController,
@@ -63,6 +79,7 @@ public class Project1Config extends Config {
 			) {
 		this.sourceFile = sourceFile;
 		this.outputFile = outputFile;
+		this.shouldProduceOutputFile = shouldProduceOutputFile;
 		this.invertedIndex = invertedIndex;
 		this.invertedIndexView = invertedIndexView;
 //		this.invertedIndexController = invertedIndexController;
@@ -91,7 +108,7 @@ public class Project1Config extends Config {
 	public static class Factory {
 		
 		/** Statically assigned vars and dependencies - we choose these implementations because I said so */
-		private final static String sourceFlag = "-path";
+		private final static String sourceFlag = "-text";
 		private final static String outputFlag = "-index";
 		private final static Path defaultOutputFile = Path.of("index.json");
 		private final static TextStemmer<Path> stemmer = new TextFileStemmer();
@@ -107,6 +124,7 @@ public class Project1Config extends Config {
 			CommandLineReader argMap = new ArgumentMap(args);
 			Path sourceFile = argMap.getPath(sourceFlag, null);
 			Path outputFile = argMap.getPath(outputFlag, defaultOutputFile);
+			boolean shouldProduceOutputFile = argMap.hasNonNullValue(outputFlag);
 			DataToTextFileView view = new InvertedIndexView(
 					index,
 					outputFile);
@@ -121,6 +139,7 @@ public class Project1Config extends Config {
 			return new Project1Config(
 					sourceFile,
 					outputFile,
+					shouldProduceOutputFile,
 					index,
 					view,
 //					controller,

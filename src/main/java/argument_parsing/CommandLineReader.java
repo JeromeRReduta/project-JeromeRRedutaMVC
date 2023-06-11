@@ -15,7 +15,7 @@ public interface CommandLineReader {
 	 * @return the value mapped to the given flag as a string, or defaultValue
 	 * if no value exists or is null
 	 */
-	public String getString(String flag, String defaultValue);
+	String getString(String flag, String defaultValue);
 	
 	/** Returns the value mapped to the given flag as a Path, or defaultValue
 	 * if no value exists or is null
@@ -24,7 +24,7 @@ public interface CommandLineReader {
 	 * @return the value mapped to the given flag as a Path, or defaultValue
 	 * if no value exists or is null
 	 */
-	public Path getPath(String flag, Path defaultValue);
+	Path getPath(String flag, Path defaultValue);
 	
 	/** Returns the value mapped to the given flag as an Integer, or defaultValue
 	 * if no value exists or is null
@@ -33,5 +33,23 @@ public interface CommandLineReader {
 	 * @return the value mapped to the given flag as an Integer, or defaultValue
 	 * if no value exists or is null
 	 */
-	public int getInteger(String flag, int defaultValue);
+	int getInteger(String flag, int defaultValue);
+	
+	/**
+	 * Returns whether the reader has a given, non-null value associated with a flag
+	 * @param flag flag
+	 * @return if the reader has a given flag
+	 */
+	boolean hasNonNullValue(String flag);
+	
+	/**
+	 * Returns whether the reader contains a given flag, regardless of what the
+	 * actual value is. This means that if the reader parsed -flag=null, then
+	 * containsFlag(-flag) = true
+	 * @param flag flag
+	 * @return whether the reader contains a given flag, regardless of its value
+	 */
+	boolean containsFlag(String flag);
+	
+	
 }

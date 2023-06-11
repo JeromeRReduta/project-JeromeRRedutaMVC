@@ -1,5 +1,6 @@
 package stem_reading;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 /**
@@ -15,8 +16,8 @@ public interface StemReader<E> {
 	 * data source must be managed by the implementation.
 	 */
 	default void readIntoInvertedIndex() {
-		Collection<E> textSources = getTextSources();
 		try {
+			Collection<E> textSources = getTextSources();
 			for (E source : textSources) {
 				readIntoInvertedIndex(source);
 			}
@@ -38,5 +39,5 @@ public interface StemReader<E> {
 	 * must be managed by the implementation.
 	 * @return
 	 */
-	Collection<E> getTextSources();
+	Collection<E> getTextSources() throws NullPointerException;
 }
