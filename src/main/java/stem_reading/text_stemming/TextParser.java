@@ -1,4 +1,4 @@
-package text_stemming;
+package stem_reading.text_stemming;
 
 import java.io.BufferedReader;
 import java.text.Normalizer;

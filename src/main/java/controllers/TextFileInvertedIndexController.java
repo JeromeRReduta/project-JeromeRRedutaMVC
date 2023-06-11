@@ -1,11 +1,11 @@
 package controllers;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
 import data.InvertedIndex;
 import views.DataToTextFileView;
-import views.InvertedIndexView;
 
 /**
  * Implementation of InvertedIndexController that writes its output to a file
@@ -26,8 +26,18 @@ public class TextFileInvertedIndexController implements InvertedIndexController 
 	}
 	
 	@Override
-	public void displayIndex() {
-		view.writeToFile();
+	public void tryDisplayingIndex() {
+		try {
+			view.writeToFile();
+		}
+		catch (IOException e) {
+			System.err.println("Error occurred in controller. Cancelling file write...");
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			System.err.println("This should never run");
+			assert false;
+		}
 	}
 
 	@Override

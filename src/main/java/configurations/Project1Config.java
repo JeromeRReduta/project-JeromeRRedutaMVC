@@ -1,28 +1,27 @@
 package configurations;
 
-import text_finding.TextSourceFinder;
-import json.JsonCollectionWriter;
-import views.DataToTextFileView;
-import views.InvertedIndexView;
-import text_finding.TextFileFinder;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import argument_parsing.ArgumentMap;
-import argument_parsing.CommandLineReader;
 import controllers.InvertedIndexController;
 import controllers.TextFileInvertedIndexController;
-import text_stemming.TextStemmer;
-import text_stemming.TextFileStemmer;
-import stem_reading.StemReader;
-import stem_reading.TextFileStemReader;
 import data.InvertedIndex;
 import data.SimpleInvertedIndex;
+import json.JsonMapWriter;
+import stem_reading.StemReader;
+import stem_reading.TextFileStemReader;
+import stem_reading.text_finding.TextFileFinder;
+import stem_reading.text_finding.TextSourceFinder;
+import stem_reading.text_stemming.TextFileStemmer;
+import stem_reading.text_stemming.TextStemmer;
+import views.DataToTextFileView;
+import views.InvertedIndexView;
 
-public class Project1Config extends Config {
+public class Project1Config implements Config {
 	
 	/* TODO:
 	 * 1. Finish SimpleInvertedIndex, MapOfMapsWriter, MapOfCollectionsWriter, CollectionsWriter (done - no composite json writers allowed though)
@@ -56,8 +55,6 @@ public class Project1Config extends Config {
 	
 	public final Path outputFile;
 	
-	public final boolean shouldProduceOutputFile;
-	
 	public final InvertedIndex invertedIndex;
 	
 	public final DataToTextFileView invertedIndexView;
@@ -73,7 +70,6 @@ public class Project1Config extends Config {
 	private Project1Config(
 			Path sourceFile,
 			Path outputFile,
-			boolean shouldProduceOutputFile,
 			InvertedIndex invertedIndex,
 			DataToTextFileView invertedIndexView,
 			InvertedIndexController invertedIndexController,
@@ -83,7 +79,6 @@ public class Project1Config extends Config {
 			) {
 		this.sourceFile = sourceFile;
 		this.outputFile = outputFile;
-		this.shouldProduceOutputFile = shouldProduceOutputFile;
 		this.invertedIndex = invertedIndex;
 		this.invertedIndexView = invertedIndexView;
 		this.invertedIndexController = invertedIndexController;
@@ -91,32 +86,39 @@ public class Project1Config extends Config {
 		this.textStemmer = textStemmer;
 		this.stemReader = stemReader;
 	}
+
+
 	
 	@Override
 	public void writeToJson(Writer writer, int baseIndent) throws IOException {
-		var utility = new JsonCollectionWriter<>(
-				configAsList(),
+		var utility = new JsonMapWriter<>(
+				configAsMap(),
 				writer,
 				0);
 		utility.writeIndented("CONFIGS: ", 0);
 		utility.writeAllElements();
 	}
 	
-	/**
-	 * Represents this data as a list of attributes
-	 * @return a list representation of the config's data
-	 */
-	private List<String> configAsList() {
-		return List.of(
-				"sourceFile: " + sourceFile,
-				"outputFile: " + outputFile,
-				"shouldProduceOutputFile: " + shouldProduceOutputFile,
-				"InvertedIndex class: " + invertedIndex.getClass().getSimpleName(),
-				"DataToTextFileView class: " + invertedIndexView.getClass().getSimpleName(),
-				"InvertedIndexController class: " + invertedIndexController.getClass().getSimpleName(),
-				"TextFinder class: " + textFinder.getClass().getSimpleName(),
-				"TextStemmer class: " + textStemmer.getClass().getSimpleName(),
-				"Stem Reader class: " + stemReader.getClass().getSimpleName());
+	private Map<String, Object> configAsMap() {
+		try {
+			return Map.of(
+					"sourceFile", sourceFile,
+					"outputFile", outputFile,
+					"InvertedIndex class", invertedIndex.getClass().getSimpleName(),
+					"DataToTextFileView class", invertedIndexView.getClass().getSimpleName(),
+					"TextFinder class", textFinder.getClass().getSimpleName(),
+					"TextStemmer class", textStemmer.getClass().getSimpleName(),
+					"StemReader class", stemReader.getClass().getSimpleName());
+		}
+		catch (NullPointerException e) {
+			return new HashMap<>();
+		}
+		catch (Exception e) {
+			System.err.println("Should never run");
+			assert false;
+			return new HashMap<>();
+
+		}
 	}
 	
 	@Override
@@ -124,47 +126,64 @@ public class Project1Config extends Config {
 		return toJsonString();
 	}
 
-	public static class Factory {
+	public static class Factory implements Config.Factory<Project1Config> {
 		
+		private ArgumentMap argMap;
+	
 		/** Statically assigned vars and dependencies - we choose these implementations because I said so */
-		private final static String sourceFlag = "-text";
-		private final static String outputFlag = "-index";
-		private final static Path defaultOutputFile = Path.of("index.json");
-		private final static TextStemmer<Path> stemmer = new TextFileStemmer();
-		private final static InvertedIndex index = new SimpleInvertedIndex();
-
-		/**
-		 * Sets up the configs. This should be the only way to create a new Project1Config.
-		 * 
-		 * @param args commandline args
-		 * @return a Project1Config
+		private final String sourceFlag = "-text";
+		private final String outputFlag = "-index";
+		private final Path defaultOutputFile = Path.of("index.json");
+		private final Path noTextFlagOutputFile = null;
+		private final TextStemmer<Path> stemmer = new TextFileStemmer();
+		private final InvertedIndex index = new SimpleInvertedIndex();
+		
+		/** Dynamically assigned vars and dependencies - either chosen from commandline args or depending on something chosen from commandline args */
+		private final Path sourceFile;
+		private final Path outputFile;
+		private final DataToTextFileView view;
+		private final InvertedIndexController controller;
+		private final TextSourceFinder<Path> finder;
+		private final StemReader<Path> reader;
+		
+		/* Apparently if you don't set every var to final, the compiler
+		 * won't complain if you forget to set it and leave it null
 		 */
-		public static Project1Config createFromArgs(String[] args) {
-			CommandLineReader argMap = new ArgumentMap(args);
-			Path sourceFile = argMap.getPath(sourceFlag, null);
-			Path outputFile = argMap.getPath(outputFlag, defaultOutputFile);
-			boolean shouldProduceOutputFile = argMap.hasNonNullValue(outputFlag);
-			DataToTextFileView view = new InvertedIndexView(
+		public Factory(String[] args) {
+			this.argMap = new ArgumentMap(args);
+			this.sourceFile = argMap.getPath(sourceFlag, null);
+			this.outputFile = argMap.containsFlag(outputFlag)
+					? argMap.getPath(outputFlag, defaultOutputFile)
+					: noTextFlagOutputFile;
+			this.view = new InvertedIndexView(
 					index,
 					outputFile);
-			InvertedIndexController controller = new TextFileInvertedIndexController(
+			this.controller = new TextFileInvertedIndexController(
 					index,
 					view);
-			TextSourceFinder<Path> finder = new TextFileFinder(sourceFile);
-			StemReader<Path> reader = new TextFileStemReader(
+			this.finder = new TextFileFinder(sourceFile);
+			this.reader = new TextFileStemReader(
 					index,
 					finder,
 					stemmer);
+			System.out.println(sourceFile);
+		}
+		@Override
+		public Project1Config createConfig() {
 			return new Project1Config(
 					sourceFile,
 					outputFile,
-					shouldProduceOutputFile,
 					index,
 					view,
 					controller,
 					finder,
 					stemmer,
 					reader);
+		}
+
+		@Override
+		public ConfigValidator<Project1Config> getValidator(Project1Config config) {
+			return new Project1ConfigValidator(config);
 		}
 	}
 }

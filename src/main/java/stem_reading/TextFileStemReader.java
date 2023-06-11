@@ -1,11 +1,12 @@
 package stem_reading;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 
 import data.InvertedIndex;
-import text_finding.TextSourceFinder;
-import text_stemming.TextStemmer;
+import stem_reading.text_finding.TextSourceFinder;
+import stem_reading.text_stemming.TextStemmer;
 
 public class TextFileStemReader implements StemReader<Path> {
 	
@@ -25,7 +26,7 @@ public class TextFileStemReader implements StemReader<Path> {
 	}
 	
 	@Override
-	public void readIntoInvertedIndex(Path source) throws Exception {
+	public void readIntoInvertedIndex(Path source) throws IOException {
 		int position = 1;
 		Collection<String> stems = stemmer.listStems(source);
 		for (String stem : stems) {
@@ -38,7 +39,7 @@ public class TextFileStemReader implements StemReader<Path> {
 	}
 
 	@Override
-	public Collection<Path> getTextSources() throws NullPointerException {
+	public Collection<Path> getTextSources() throws IOException {
 		return finder.getTextSources();
 	}
 }

@@ -1,7 +1,6 @@
 package configurations;
 
 import json.JsonWriteable;
-
 /**
  * Allows project configs to be used all under
  * one supertype. No other use.
@@ -9,6 +8,41 @@ import json.JsonWriteable;
  * @author JRRed
  *
  */
-public abstract class Config implements JsonWriteable {
+public interface Config extends JsonWriteable {
+	
+	/**
+	 * Factory pattern for a given Config
+	 * @author JRRed
+	 *
+	 */
+	public interface Factory<C extends Config> {
+		
+		/**
+		 * Creates a new config from commandline args, validates it, and returns it if valid.
+		 * Implementation should handle commandline arg processing
+		 * @param validator A ConfigValidator
+		 * @return a valid config
+		 * @throws InvalidConfigException if the config is invalid, which should end the program
+		 */
+		default C createFromArgs() throws InvalidConfigException {
+			C config = createConfig();
+			System.out.println("CONFIG: " + config);
+			getValidator(config).validate();
+			return config;
+		}
+		
+		/**
+		 * Creates a config. This should be the ONLY WAY to get a new config
+		 * @return
+		 */
+		C createConfig();
+		
+		/**
+		 * Gets a validator for the Config
+		 * @param Config config
+		 * @return a validator for this Config
+		 */
+		ConfigValidator<C> getValidator(C Config);
+	}
 
 }

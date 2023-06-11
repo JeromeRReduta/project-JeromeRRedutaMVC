@@ -1,5 +1,6 @@
 package views;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import data.InvertedIndex;
@@ -18,9 +19,8 @@ public class InvertedIndexView implements DataToTextFileView {
 		this.outputFile = outputFile;
 	}
 	
-	public void writeToFile() {
+	public void writeToFile() throws IOException {
 		writeToFile(outputFile, model);
-		
 	}
 
 }

@@ -14,13 +14,13 @@ public interface DataToTextFileView {
 	 * Writes the object in a JSON representation to a file. 
 	 * This should call writeToFile(Path, JsonWriteable)
 	 */
-	void writeToFile();
+	void writeToFile() throws IOException;
 	
 	/**
 	 * Default logic for writing to file
 	 * @param outputFile
 	 */
-	default void writeToFile(Path outputFile, JsonWriteable model) {
+	default void writeToFile(Path outputFile, JsonWriteable model) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(
 				outputFile,
 				StandardCharsets.UTF_8)) {

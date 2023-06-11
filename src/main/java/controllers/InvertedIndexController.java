@@ -15,7 +15,7 @@ public interface InvertedIndexController {
 	 * Writes the index to an output. The index and the output source
 	 * are handled by the implementation.
 	 */
-	void displayIndex();
+	void tryDisplayingIndex();
 	
 	/**
 	 * Given a stem as key, returns the associated inner map value. To ensure data safety, this method

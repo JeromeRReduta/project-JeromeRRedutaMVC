@@ -1,4 +1,4 @@
-package text_stemming;
+package stem_reading.text_stemming;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 public class TextFileStemmer implements TextStemmer<Path> {
 	

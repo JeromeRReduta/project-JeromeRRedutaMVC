@@ -3,7 +3,6 @@ package json;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-import java.util.Set;
 
 public class JsonMapWriter<K, V> implements JsonDataStructUtility<Map.Entry<K, V>> {
 

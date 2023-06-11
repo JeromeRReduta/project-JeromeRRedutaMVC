@@ -1,4 +1,4 @@
-package text_stemming;
+package stem_reading.text_stemming;
 
 import java.io.IOException;
 import java.util.ArrayList;

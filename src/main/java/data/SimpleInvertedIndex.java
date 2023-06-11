@@ -1,14 +1,13 @@
 package data;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import json.JsonCollectionWriter;
 import json.JsonWriteable;
 import json.JsonWriteableMapWriter;
-import json.JsonCollectionWriter;
 
 //TODO: FINISH IMPLEMENTATION
 
