@@ -1,6 +1,7 @@
 package configurations;
 
 import text_finding.TextSourceFinder;
+import json.JsonCollectionWriter;
 import views.DataToTextFileView;
 import views.InvertedIndexView;
 import text_finding.TextFileFinder;
@@ -8,9 +9,12 @@ import text_finding.TextFileFinder;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.List;
 
 import argument_parsing.ArgumentMap;
 import argument_parsing.CommandLineReader;
+import controllers.InvertedIndexController;
+import controllers.TextFileInvertedIndexController;
 import text_stemming.TextStemmer;
 import text_stemming.TextFileStemmer;
 import stem_reading.StemReader;
@@ -25,8 +29,8 @@ public class Project1Config extends Config {
 	 * 2. InvertedIndexView (done - changed to dataToTextFileView)
 	 * 3. TextFileInvertedIndexView (done - changed to InvertedIndexView)
 	 * 4. Test in Driver (eh - done)
-	 * 5. InvertedIndexController, TextFileInvertedIndexController
-	 * 6. Project1Config and Factory, ConfigWriter
+	 * 5. InvertedIndexController, TextFileInvertedIndexController(x) 
+	 * 6. Project1Config and Factory, ConfigWriter (done - did not do config writer but gave a list representation instead)
 	 * 7. Test in Driver
 	 * 8. App (abstract class)
 	 * 		EXCEPTION HANDLING - find the highest-possible level abstraction and have it deal w/ any exceptions that get thrown
@@ -57,8 +61,8 @@ public class Project1Config extends Config {
 	public final InvertedIndex invertedIndex;
 	
 	public final DataToTextFileView invertedIndexView;
-//	
-//	public final InvertedIndexController invertedIndexController;
+	
+	public final InvertedIndexController invertedIndexController;
 	
 	public final TextSourceFinder<Path> textFinder;
 	
@@ -72,7 +76,7 @@ public class Project1Config extends Config {
 			boolean shouldProduceOutputFile,
 			InvertedIndex invertedIndex,
 			DataToTextFileView invertedIndexView,
-//			InvertedIndexController invertedIndexController,
+			InvertedIndexController invertedIndexController,
 			TextSourceFinder<Path> textFinder,
 			TextStemmer<Path> textStemmer,
 			StemReader<Path> stemReader
@@ -82,7 +86,7 @@ public class Project1Config extends Config {
 		this.shouldProduceOutputFile = shouldProduceOutputFile;
 		this.invertedIndex = invertedIndex;
 		this.invertedIndexView = invertedIndexView;
-//		this.invertedIndexController = invertedIndexController;
+		this.invertedIndexController = invertedIndexController;
 		this.textFinder = textFinder;
 		this.textStemmer = textStemmer;
 		this.stemReader = stemReader;
@@ -90,20 +94,35 @@ public class Project1Config extends Config {
 	
 	@Override
 	public void writeToJson(Writer writer, int baseIndent) throws IOException {
-		
-		/* TODO: implement Project1ConfigWriter so I can uncomment this */
-//		var utility = new Project1ConfigWriter(
-//				this,
-//				writer,
-//				baseIndent);
-//		utility.writeAllElements();
+		var utility = new JsonCollectionWriter<>(
+				configAsList(),
+				writer,
+				0);
+		utility.writeIndented("CONFIGS: ", 0);
+		utility.writeAllElements();
+	}
+	
+	/**
+	 * Represents this data as a list of attributes
+	 * @return a list representation of the config's data
+	 */
+	private List<String> configAsList() {
+		return List.of(
+				"sourceFile: " + sourceFile,
+				"outputFile: " + outputFile,
+				"shouldProduceOutputFile: " + shouldProduceOutputFile,
+				"InvertedIndex class: " + invertedIndex.getClass().getSimpleName(),
+				"DataToTextFileView class: " + invertedIndexView.getClass().getSimpleName(),
+				"InvertedIndexController class: " + invertedIndexController.getClass().getSimpleName(),
+				"TextFinder class: " + textFinder.getClass().getSimpleName(),
+				"TextStemmer class: " + textStemmer.getClass().getSimpleName(),
+				"Stem Reader class: " + stemReader.getClass().getSimpleName());
 	}
 	
 	@Override
 	public String toString() {
 		return toJsonString();
 	}
-	
 
 	public static class Factory {
 		
@@ -128,9 +147,9 @@ public class Project1Config extends Config {
 			DataToTextFileView view = new InvertedIndexView(
 					index,
 					outputFile);
-//			InvertedIndexController controller = new TextFileInvertedIndexController(
-//					index,
-//					view);
+			InvertedIndexController controller = new TextFileInvertedIndexController(
+					index,
+					view);
 			TextSourceFinder<Path> finder = new TextFileFinder(sourceFile);
 			StemReader<Path> reader = new TextFileStemReader(
 					index,
@@ -142,18 +161,10 @@ public class Project1Config extends Config {
 					shouldProduceOutputFile,
 					index,
 					view,
-//					controller,
+					controller,
 					finder,
 					stemmer,
-					reader
-					);
+					reader);
 		}
 	}
-
-
-
-	
-
 }
-
-

@@ -39,6 +39,9 @@ public class Driver {
 	public static void main(String[] args) {
 		// store initial start time
 		Instant start = Instant.now();
+		Project1Config config = Project1Config.Factory.createFromArgs(args);
+		System.out.println(config);
+		
 		try {
 			ArgumentMap map = new ArgumentMap(args);
 			InvertedIndex index = new SimpleInvertedIndex();
