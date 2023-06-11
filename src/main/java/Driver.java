@@ -1,4 +1,10 @@
 import configurations.Config;
+import data.InvertedIndex;
+import data.SimpleInvertedIndex;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -25,12 +31,14 @@ public class Driver {
 		// store initial start time
 		Instant start = Instant.now();
 
-		Config config = Project1Config.Factory.createFromArgs(new String[] {"-path", "a.txt"});
-		System.out.println(config);
+		InvertedIndex index = new SimpleInvertedIndex();
+		index.add("a",  "b.txt", 1);
+		index.add("z",  "other.txt", 1);
+		System.out.println(index);
+		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-		System.out.println("aaah");
 		System.out.printf("Elapsed: %f seconds%n", seconds);
 	}
 

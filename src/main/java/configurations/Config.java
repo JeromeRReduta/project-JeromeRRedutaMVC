@@ -1,5 +1,7 @@
 package configurations;
 
+import json.JsonWriteable;
+
 /**
  * Allows project configs to be used all under
  * one supertype. No other use.
@@ -7,6 +9,6 @@ package configurations;
  * @author JRRed
  *
  */
-public abstract class Config {
+public abstract class Config implements JsonWriteable {
 
 }

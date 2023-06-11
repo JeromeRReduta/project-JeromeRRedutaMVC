@@ -4,6 +4,9 @@ import text_finding.TextSourceFinder;
 import views.DataToTextFileView;
 import views.InvertedIndexView;
 import text_finding.TextFileFinder;
+
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Path;
 
 import argument_parsing.ArgumentMap;
@@ -18,12 +21,12 @@ import data.SimpleInvertedIndex;
 public class Project1Config extends Config {
 	
 	/* TODO:
-	 * 1. Finish SimpleInvertedIndex
+	 * 1. Finish SimpleInvertedIndex, MapOfMapsWriter, MapOfCollectionsWriter, CollectionsWriter (done - no composite json writers allowed though)
 	 * 2. InvertedIndexView (done - changed to dataToTextFileView)
 	 * 3. TextFileInvertedIndexView (done - changed to InvertedIndexView)
-	 * 4. Test in Driver
-	 * 5. TextFileInvertedIndexController
-	 * 6. SimpleInvertedIndexController
+	 * 4. Test in Driver (eh - done)
+	 * 5. InvertedIndexController, TextFileInvertedIndexController
+	 * 6. Project1Config and Factory, ConfigWriter
 	 * 7. Test in Driver
 	 * 8. App (abstract class)
 	 * 9. Project1App
@@ -69,16 +72,19 @@ public class Project1Config extends Config {
 	}
 	
 	@Override
+	public void writeToJson(Writer writer, int baseIndent) throws IOException {
+		
+		/* TODO: implement Project1ConfigWriter so I can uncomment this */
+//		var utility = new Project1ConfigWriter(
+//				this,
+//				writer,
+//				baseIndent);
+//		utility.writeAllElements();
+	}
+	
+	@Override
 	public String toString() {
-		return String.format("Project 1 configs:\n"
-				+ "\tSource file: %s\n"
-				+ "\tOutput file: %s\n",
-				/** TODO: Add the rest of the stuff
-				 * 
-				 */
-				
-				sourceFile,
-				outputFile);
+		return toJsonString();
 	}
 	
 
@@ -124,6 +130,9 @@ public class Project1Config extends Config {
 					);
 		}
 	}
+
+
+
 	
 
 }

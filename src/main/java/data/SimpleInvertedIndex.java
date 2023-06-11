@@ -1,11 +1,14 @@
 package data;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import json.JsonWriteable;
+import json.JsonWriteableMapWriter;
+import json.JsonCollectionWriter;
 
 //TODO: FINISH IMPLEMENTATION
 
@@ -19,9 +22,15 @@ public class SimpleInvertedIndex
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void add(String stem, String fileName, int position) {
-		// TODO Auto-generated method stub
-		
+	public void add(
+			String stem,
+			String fileName,
+			int position) {
+		super.putIfAbsent(stem, new FileNamePositionMap());
+		var innerMap = superGet(stem);
+		innerMap.putIfAbsent(fileName, new StemPositionSet());
+		var positionList = innerMap.superGet(fileName);
+		positionList.add(position);
 	}
 	
 	@Override
@@ -29,20 +38,45 @@ public class SimpleInvertedIndex
 		return super.get(stem).clone();
 	}
 	
-
+	/** Lets the InvertedIndex get the actual inner data structure */
+	private FileNamePositionMap superGet(String stem) {
+		return super.get(stem);
+	}
 	@Override
 	public void writeToJson(Writer writer, int baseIndent) throws IOException {
-		// TODO Auto-generated method stub
-		
+		var utility = new JsonWriteableMapWriter<>(
+				this,
+				writer,
+				baseIndent);
+		utility.writeAllElements();
 	}
+	
+	/*  Note that the toString() of the outer data structures don't actually call any of the
+	 *  toString()'s of the inner data structures. This is because we're using writeToJson() to
+	 *  format the String, not toString() itself. The other toStrings() are mainly for printing/debugging
+	 */
+	@Override
+	public String toString() {
+		return toJsonString();
+	}
+	
+	/**
+	 * Creates a cloned InvertedIndex, then adds cloned FileNamePositionMaps 
+	 * to the cloned index, then returns index
+	 */
 	
 	@Override
 	public SimpleInvertedIndex clone() {
-		return null;
+		SimpleInvertedIndex clonedIndex = new SimpleInvertedIndex();
+		super.entrySet().forEach(entry -> clonedIndex.put(
+				entry.getKey(),
+				entry.getValue().clone()));
+		return clonedIndex;
 	}
 	
-	class FileNamePositionMap
-		extends TreeMap<String, data.SimpleInvertedIndex.FileNamePositionMap.StemPositionList>
+	/** Implementation of the inner map, holding FileName-StemPositionSet pairs */
+	public class FileNamePositionMap
+		extends TreeMap<String, data.SimpleInvertedIndex.StemPositionSet>
 		implements JsonWriteable, Cloneable {
 		
 		/**
@@ -50,36 +84,82 @@ public class SimpleInvertedIndex
 		 */
 		private static final long serialVersionUID = 1L;
 
-		public FileNamePositionMap() {
-			
-		}
+		private FileNamePositionMap() {}
 		
-		
-		public StemPositionList get(String fileName) {
+		/**
+		 * Returns a CLONE of the innermost data structure, the StemPositionSet
+		 * @param fileName fileName, used as a key
+		 * @return a CLONE of the StemPositionSet associated with this key
+		 */
+		public StemPositionSet get(String fileName) {
 			return super.get(fileName).clone();
 		}
-
-	
 		
+		/** Lets the map get the actual inner data structure */
+		private StemPositionSet superGet(String fileName) {
+			return super.get(fileName);
+		}
 		
 		@Override
 		public FileNamePositionMap clone() {
-			return null;
+			FileNamePositionMap clonedMap = new FileNamePositionMap();
+			super.entrySet().forEach(entry -> clonedMap.put(
+					entry.getKey(),
+					entry.getValue().clone()));
+			return clonedMap;
 		}
 		
-		class StemPositionList
-			extends TreeSet<Integer>
-			implements JsonWriteable, Cloneable {
-
-
-			
-			@Override
-			public StemPositionList clone() {
-				return null;
-			}
+		@Override
+		public void writeToJson(Writer writer, int baseIndent) throws IOException {
+			var utility = new JsonWriteableMapWriter<>(
+					this,
+					writer,
+					baseIndent);
+			utility.writeAllElements();
 			
 		}
 		
+		@Override
+		public String toString() {
+			return toJsonString();
+		}
+	}
+	
+	/** Implementation of the collection of file positions where a given stem is found in a given file
+	 * 
+	 * @author JRRed
+	 *
+	 */
+	public class StemPositionSet
+		extends TreeSet<Integer>
+		implements JsonWriteable, Cloneable {
+		
+		/**
+		 * Unused
+		 */
+		private static final long serialVersionUID = 1L;
+
+		private StemPositionSet() {}
+	
+		
+		@Override
+		public StemPositionSet clone() {
+			return (StemPositionSet)super.clone();
+		}
+	
+		@Override
+		public void writeToJson(Writer writer, int baseIndent) throws IOException {
+			var utility = new JsonCollectionWriter<>(
+					this,
+					writer,
+					baseIndent);
+			utility.writeAllElements();
+		}
+		
+		@Override
+		public String toString() {
+			return toJsonString();
+		}
 	}
 
 }

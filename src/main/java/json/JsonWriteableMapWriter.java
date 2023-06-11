@@ -2,30 +2,36 @@ package json;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.Map;
 
-public class JsonMapOfCollectionsWriter<A, B, X extends Collection<B>>
-        implements JsonDataStructUtility<Map.Entry<A, X>> {
+/**
+ * Utility class for printing a map that holds key-JsonWriteable pairs.
+ * @author JRRed
+ *
+ * @param <K> key type
+ * @param <JsonWriteable> value type. Must extend JsonWriteable
+ */
+public class JsonWriteableMapWriter<K, V extends JsonWriteable> implements JsonDataStructUtility<Map.Entry<K, V>> {
 
     private String startingBrace = "{";
 
     private String endingBrace = "}";
 
-    private Map<A, X> mapOFCollections;
+    private Map<K, V> map;
 
     private Writer writer;
 
     private int indent;
 
-    public JsonMapOfCollectionsWriter(
-            Map<A, X> mapOFCollections,
+    public JsonWriteableMapWriter(
+            Map<K, V> map,
             Writer writer,
             int indent) {
-        this.mapOFCollections = mapOFCollections;
+        this.map = map;
         this.writer = writer;
         this.indent = indent;
     }
+
     @Override
     public String getStartingBrace() {
         return startingBrace;
@@ -47,19 +53,15 @@ public class JsonMapOfCollectionsWriter<A, B, X extends Collection<B>>
     }
 
     @Override
-    public Iterable<Map.Entry<A, X>> getIterable() {
-        return mapOFCollections.entrySet();
+    public Iterable<Map.Entry<K, V>> getIterable() {
+        return map.entrySet();
     }
 
     @Override
-    public void writeElement(Map.Entry<A, X> element) throws IOException {
-        A key = element.getKey();
-        X collection = element.getValue();
+    public void writeElement(Map.Entry<K, V> element) throws IOException {
+        K key = element.getKey();
+        JsonWriteable value = element.getValue();
         writeIndented('"' + key.toString() + '"' + ": ", 1);
-        var utility = new JsonCollectionWriter<B>(
-                collection,
-                writer,
-                indent + 1);
-        utility.writeAllElements();
+        value.writeToJson(writer, indent + 1);
     }
 }
