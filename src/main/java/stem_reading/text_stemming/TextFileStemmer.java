@@ -15,6 +15,11 @@ import java.util.stream.Stream;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
+/**
+ * Implementation of TextStemmer for a text source, given as a Path
+ * @author JRRed
+ *
+ */
 public class TextFileStemmer implements TextStemmer<Path> {
 	
     private final SnowballStemmer.ALGORITHM DEFAULT;
@@ -54,5 +59,4 @@ public class TextFileStemmer implements TextStemmer<Path> {
 				.collect(Collectors.toCollection(supplier));
 		
 	}
-
 }

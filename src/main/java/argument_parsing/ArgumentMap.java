@@ -119,5 +119,4 @@ public class ArgumentMap
 	public boolean containsFlag(String flag) {
 		return super.containsKey(flag);
 	}
-
 }

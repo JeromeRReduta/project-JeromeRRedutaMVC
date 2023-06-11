@@ -30,5 +30,4 @@ public interface JsonWriteable {
 			return null;
 		}
 	}
-
 }

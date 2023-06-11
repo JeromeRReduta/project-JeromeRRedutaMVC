@@ -26,7 +26,8 @@ public class JsonWriteableMapWriter<K, V extends JsonWriteable> implements JsonD
     public JsonWriteableMapWriter(
             Map<K, V> map,
             Writer writer,
-            int indent) {
+            int indent
+            ) {
         this.map = map;
         this.writer = writer;
         this.indent = indent;
@@ -65,3 +66,4 @@ public class JsonWriteableMapWriter<K, V extends JsonWriteable> implements JsonD
         value.writeToJson(writer, indent + 1);
     }
 }
+//nice

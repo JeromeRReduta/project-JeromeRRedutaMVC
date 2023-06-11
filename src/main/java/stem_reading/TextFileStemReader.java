@@ -19,7 +19,8 @@ public class TextFileStemReader implements StemReader<Path> {
 	public TextFileStemReader(
 			InvertedIndex index,
 			TextSourceFinder<Path> finder,
-			TextStemmer<Path> stemmer) {
+			TextStemmer<Path> stemmer
+			) {
 		this.index = index;
 		this.finder = finder;
 		this.stemmer = stemmer;

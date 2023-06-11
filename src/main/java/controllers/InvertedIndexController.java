@@ -24,5 +24,4 @@ public interface InvertedIndexController {
 	 * @return a CLONE of the associated value
 	 */
 	Map<String, ? extends Collection<Integer>> get(String stem);
-
 }

@@ -4,19 +4,25 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 
+/**
+ * Writes a collection of elements to JSON format
+ * @author JRRed
+ *
+ * @param <E> element type
+ */
 public class JsonCollectionWriter<E> implements JsonDataStructUtility<E> {
 
     private String startingBrace = "[";
     private String endingBrace = "]";
     private Collection<E> collection;
     private Writer writer;
-
     private int indent;
 
     public JsonCollectionWriter(
             Collection<E> collection,
             Writer writer,
-            int indent) {
+            int indent
+            ) {
         this.collection = collection;
         this.writer = writer;
         this.indent = indent;

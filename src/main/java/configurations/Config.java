@@ -1,6 +1,7 @@
 package configurations;
 
 import json.JsonWriteable;
+
 /**
  * Allows project configs to be used all under
  * one supertype. No other use.
@@ -26,7 +27,6 @@ public interface Config extends JsonWriteable {
 		 */
 		default C createFromArgs() throws InvalidConfigException {
 			C config = createConfig();
-			System.out.println("CONFIG: " + config);
 			getValidator(config).validate();
 			return config;
 		}
@@ -44,5 +44,4 @@ public interface Config extends JsonWriteable {
 		 */
 		ConfigValidator<C> getValidator(C Config);
 	}
-
 }

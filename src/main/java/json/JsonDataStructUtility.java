@@ -23,11 +23,17 @@ public interface JsonDataStructUtility<E> {
     int getIndent();
 
     /**
-     * Returns an interable for writeAllElements(Iterable)
+     * Returns an iterable for writeAllElements(Iterable)
+     * @return the iterable
      */
     Iterable<E> getIterable();
 
-    /** writes an element with a given indent level */
+    /**
+     * Writes a single element with a given indent level
+     * @param element element
+     * @param offset indent offset
+     * @throws IOException
+     */
     default void writeIndented(String element, int offset) throws IOException {
         Writer writer = getWriter();
         int indent = getIndent();
@@ -35,7 +41,11 @@ public interface JsonDataStructUtility<E> {
         writer.write(element);
     }
 
-    /** writes all given elements through the writer */
+    /**
+     * Writes all elements from an iterable
+     * @param iterable iterable
+     * @throws IOException
+     */
     default void writeAllElements(Iterable<E> iterable) throws IOException {
         Writer writer = getWriter();
         var it = iterable.iterator();
@@ -66,7 +76,11 @@ public interface JsonDataStructUtility<E> {
         Iterable<E> iterable = getIterable();
         writeAllElements(iterable);
     }
-    
-    /** Writes a single element */
+
+    /**
+     * Writes a single element
+     * @param element
+     * @throws IOException
+     */
     void writeElement(E element) throws IOException;
 }

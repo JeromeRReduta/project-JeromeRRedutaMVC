@@ -9,8 +9,6 @@ import json.JsonCollectionWriter;
 import json.JsonWriteable;
 import json.JsonWriteableMapWriter;
 
-//TODO: FINISH IMPLEMENTATION
-
 public class SimpleInvertedIndex
 	extends TreeMap<String, data.SimpleInvertedIndex.FileNamePositionMap>
 	implements InvertedIndex {
@@ -24,7 +22,8 @@ public class SimpleInvertedIndex
 	public void add(
 			String stem,
 			String fileName,
-			int position) {
+			int position
+			) {
 		super.putIfAbsent(stem, new FileNamePositionMap());
 		var innerMap = superGet(stem);
 		innerMap.putIfAbsent(fileName, new StemPositionSet());
@@ -37,10 +36,15 @@ public class SimpleInvertedIndex
 		return super.get(stem).clone();
 	}
 	
-	/** Lets the InvertedIndex get the actual inner data structure */
+	/**
+	 * Lets the index call the actual get method of its inner data struct
+	 * @param stem stem
+	 * @return the actual FileNamePositionMap associated with the stem
+	 */
 	private FileNamePositionMap superGet(String stem) {
 		return super.get(stem);
 	}
+	
 	@Override
 	public void writeToJson(Writer writer, int baseIndent) throws IOException {
 		var utility = new JsonWriteableMapWriter<>(
@@ -63,7 +67,6 @@ public class SimpleInvertedIndex
 	 * Creates a cloned InvertedIndex, then adds cloned FileNamePositionMaps 
 	 * to the cloned index, then returns index
 	 */
-	
 	@Override
 	public SimpleInvertedIndex clone() {
 		SimpleInvertedIndex clonedIndex = new SimpleInvertedIndex();
@@ -94,7 +97,11 @@ public class SimpleInvertedIndex
 			return super.get(fileName).clone();
 		}
 		
-		/** Lets the map get the actual inner data structure */
+		/**
+		 * Lets the map get the actual inner set
+		 * @param fileName fileName
+		 * @return inner set associated with this fileName
+		 */
 		private StemPositionSet superGet(String fileName) {
 			return super.get(fileName);
 		}
@@ -139,7 +146,6 @@ public class SimpleInvertedIndex
 		private static final long serialVersionUID = 1L;
 
 		private StemPositionSet() {}
-	
 		
 		@Override
 		public StemPositionSet clone() {
@@ -160,5 +166,4 @@ public class SimpleInvertedIndex
 			return toJsonString();
 		}
 	}
-
 }

@@ -8,6 +8,11 @@ import java.nio.file.Path;
 
 import json.JsonWriteable;
 
+/**
+ * A view of some model which displays its data by writing to some text file
+ * @author JRRed
+ *
+ */
 public interface DataToTextFileView {
 	
 	/**
@@ -28,14 +33,5 @@ public interface DataToTextFileView {
 					writer,
 					0);
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
 	}
-
 }

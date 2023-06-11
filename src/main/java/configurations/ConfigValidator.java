@@ -14,5 +14,4 @@ public interface ConfigValidator<C extends Config> {
 	 * @throws InvalidConfigException If config is invalid.
 	 */
 	void validate() throws InvalidConfigException;
-
 }

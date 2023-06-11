@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/** Finds a collection of files (as paths) for the TextStemmer */
+/**
+ * Finds a collection of files (as paths) for the TextStemmer
+ * @author JRRed
+ *
+ */
 public class TextFileFinder implements TextSourceFinder<Path> {
 	
 	private Path dataSource;
@@ -56,6 +60,4 @@ public class TextFileFinder implements TextSourceFinder<Path> {
 				.filter(IS_TEXT)
 				.collect(Collectors.toList());
 	}
-	
-	
 }

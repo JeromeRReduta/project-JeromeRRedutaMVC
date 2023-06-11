@@ -21,35 +21,12 @@ import stem_reading.text_stemming.TextStemmer;
 import views.DataToTextFileView;
 import views.InvertedIndexView;
 
+/**
+ * Project 1 Implementation of Config
+ * @author JRRed
+ *
+ */
 public class Project1Config implements Config {
-	
-	/* TODO:
-	 * 1. Finish SimpleInvertedIndex, MapOfMapsWriter, MapOfCollectionsWriter, CollectionsWriter (done - no composite json writers allowed though)
-	 * 2. InvertedIndexView (done - changed to dataToTextFileView)
-	 * 3. TextFileInvertedIndexView (done - changed to InvertedIndexView)
-	 * 4. Test in Driver (eh - done)
-	 * 5. InvertedIndexController, TextFileInvertedIndexController(x) 
-	 * 6. Project1Config and Factory, ConfigWriter (done - did not do config writer but gave a list representation instead)
-	 * 7. Test in Driver
-	 * 8. App (abstract class)
-	 * 		EXCEPTION HANDLING - find the highest-possible level abstraction and have it deal w/ any exceptions that get thrown
-	 * 		It's probably App's responsibility - in that case, write down new App.run() with exception handling <-- do below option instead
-	 * 		OR:
-	 * 			Instead of just throwing exceptions, null check input for each method in App, e.g.: <-- do this, not exception handling
-	 * 				populateIndex():
-	 * 					if inputFile == null:
-	 * 						return
-	 * 					
-	 * 				writeToFile():
-	 * 					if outputFile == null;
-	 * 						return
-	 * 					if !shouldOutput:
-	 * 						return
-	 * 9. Project1App
-	 * 10. Run tests
-	 * 11. Debug & retest
-	 * 12. Done!
-	 */
 	
 	public final Path sourceFile;
 	
@@ -86,8 +63,6 @@ public class Project1Config implements Config {
 		this.textStemmer = textStemmer;
 		this.stemReader = stemReader;
 	}
-
-
 	
 	@Override
 	public void writeToJson(Writer writer, int baseIndent) throws IOException {
@@ -117,7 +92,6 @@ public class Project1Config implements Config {
 			System.err.println("Should never run");
 			assert false;
 			return new HashMap<>();
-
 		}
 	}
 	
@@ -126,9 +100,14 @@ public class Project1Config implements Config {
 		return toJsonString();
 	}
 
+	/**
+	 * Factory implementation for this config
+	 * @author JRRed
+	 *
+	 */
 	public static class Factory implements Config.Factory<Project1Config> {
 		
-		private ArgumentMap argMap;
+		private final ArgumentMap argMap;
 	
 		/** Statically assigned vars and dependencies - we choose these implementations because I said so */
 		private final String sourceFlag = "-text";
@@ -179,6 +158,24 @@ public class Project1Config implements Config {
 					finder,
 					stemmer,
 					reader);
+		}
+		
+		/**
+		 * Created only for testing Project1ConfigValidator. If you call this function the app will break. So like, don't.
+		 * @return don't even
+		 */
+		public Project1Config createInvalid() {
+			Project1Config config = new Project1Config(
+					null,
+					null,
+					new SimpleInvertedIndex(),
+					null,
+					null,
+					null,
+					null,
+					null);
+			getValidator(config).validate();
+			return config;
 		}
 
 		@Override

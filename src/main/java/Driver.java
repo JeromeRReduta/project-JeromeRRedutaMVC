@@ -23,32 +23,13 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 */
 	public static void main(String[] args) {
-		// store initial start time
-		Instant start = Instant.now();
-
-		var factory = new Project1Config.Factory(args);
-		var config = factory.createFromArgs();
-		//Project1Config config = new Project1Config.Factory(args).createFromArgs();
+		Instant start = Instant.now(); // store initial start time
+		Project1Config config = new Project1Config.Factory(args).createFromArgs();
 		App app = new Project1App(config);
 		app.run();
-		
 		// calculate time elapsed and output
-		Duration elapsed = Duration.between(start, Instant.now());
+		Duration elapsed = Duration.between(start, Instant.now()); 
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
 		System.out.printf("Elapsed: %f seconds%n", seconds);
 	}
-
-	/*
-	 * Generally, "Driver" classes are responsible for setting up and calling
-	 * other classes, usually from a main() method that parses command-line
-	 * parameters. Generalized reusable code are usually placed outside of the
-	 * Driver class. They are sometimes called "Main" classes too, since they 
-	 * usually include the main() method. 
-	 * 
-	 * If the driver were only responsible for a single class, we use that class
-	 * name. For example, "TaxiDriver" is what we would name a driver class that
-	 * just sets up and calls the "Taxi" class.
-	 *
-	 * TODO: Delete this after reading.
-	 */
 }

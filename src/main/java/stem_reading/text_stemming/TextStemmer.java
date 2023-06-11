@@ -22,5 +22,4 @@ public interface TextStemmer<E> {
 	 * @throws IOException
 	 */
 	public TreeSet<String> uniqueStems(E textSource) throws IOException;
-
 }

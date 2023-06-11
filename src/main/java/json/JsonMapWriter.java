@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+/**
+ * Writes a map to JSON format
+ * @author JRRed
+ *
+ * @param <K> key type
+ * @param <V> value type
+ */
 public class JsonMapWriter<K, V> implements JsonDataStructUtility<Map.Entry<K, V>> {
 
     private String startingBrace = "{";

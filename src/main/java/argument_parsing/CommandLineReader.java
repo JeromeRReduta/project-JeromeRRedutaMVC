@@ -50,6 +50,4 @@ public interface CommandLineReader {
 	 * @return whether the reader contains a given flag, regardless of its value
 	 */
 	boolean containsFlag(String flag);
-	
-	
 }

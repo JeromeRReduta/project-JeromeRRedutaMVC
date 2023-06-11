@@ -6,6 +6,11 @@ import java.nio.file.Path;
 import data.InvertedIndex;
 import json.JsonWriteable;
 
+/**
+ * Implementation of DataToTextFileView, for displaying an InvertedIndex
+ * @author JRRed
+ *
+ */
 public class InvertedIndexView implements DataToTextFileView {
 
 	private Path outputFile;
@@ -14,13 +19,14 @@ public class InvertedIndexView implements DataToTextFileView {
 	
 	public InvertedIndexView(
 			InvertedIndex index,
-			Path outputFile) {
+			Path outputFile
+			) {
 		this.model = index;
 		this.outputFile = outputFile;
 	}
 	
+	@Override
 	public void writeToFile() throws IOException {
 		writeToFile(outputFile, model);
 	}
-
 }
