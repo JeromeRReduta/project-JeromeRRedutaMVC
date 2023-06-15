@@ -1,4 +1,4 @@
-#Refactored Search Engine, MVC version
+# Refactored Search Engine, MVC version
 
 In college, I had to build a multi-threaded search engine
 that stemmed input from either a url/url directory or a
@@ -25,7 +25,7 @@ For brevity's sake, I'll only do the first 2 projects, which already
 produces a single-threaded Search Engine capable of search text files
 and directories based on commandline input.
 
-##Project 1 - Inverted Index
+## Project 1 - Inverted Index
 For this project, I had to build a system that:
 1. Given a text file, gets all text and converts them into stems. If
 given a directory, gets all text and converts text from all available
@@ -38,7 +38,7 @@ a given output file.
 whether writing to the output file is requested.
 5. Contains exception handling.
 
-##Inputs:
+## Inputs:
 flag-value pairs written in the command line
 For example, the command line args ["-text", "inputFileName", "-index", "outputFileName"]
 is converted to the following map:
