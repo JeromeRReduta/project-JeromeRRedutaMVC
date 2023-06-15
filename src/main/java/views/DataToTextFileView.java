@@ -29,9 +29,7 @@ public interface DataToTextFileView {
 		try (BufferedWriter writer = Files.newBufferedWriter(
 				outputFile,
 				StandardCharsets.UTF_8)) {
-			model.writeToJson(
-					writer,
-					0);
+			model.writeToJson(0,  writer);
 		}
 	}
 }

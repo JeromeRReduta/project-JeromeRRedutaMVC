@@ -6,8 +6,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import json.JsonCollectionWriter;
+import json.JsonMapWriter;
 import json.JsonWriteable;
-import json.JsonWriteableMapWriter;
 
 public class SimpleInvertedIndex
 	extends TreeMap<String, data.SimpleInvertedIndex.FileNamePositionMap>
@@ -19,16 +19,12 @@ public class SimpleInvertedIndex
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void add(
-			String stem,
-			String fileName,
-			int position
-			) {
+	public void add(String stem, String fileName, int position) {
 		super.putIfAbsent(stem, new FileNamePositionMap());
-		var innerMap = superGet(stem);
+		FileNamePositionMap innerMap = superGet(stem);
 		innerMap.putIfAbsent(fileName, new StemPositionSet());
-		var positionList = innerMap.superGet(fileName);
-		positionList.add(position);
+		StemPositionSet positions = innerMap.superGet(fileName);
+		positions.add(position);
 	}
 	
 	@Override
@@ -46,12 +42,8 @@ public class SimpleInvertedIndex
 	}
 	
 	@Override
-	public void writeToJson(Writer writer, int baseIndent) throws IOException {
-		var utility = new JsonWriteableMapWriter<>(
-				this,
-				writer,
-				baseIndent);
-		utility.writeAllElements();
+	public void writeToJson(int baseIndent, Writer writer) throws IOException {
+		JsonMapWriter.writeJsonWriteableMap(baseIndent, writer, this);
 	}
 	
 	/*  Note that the toString() of the outer data structures don't actually call any of the
@@ -60,7 +52,13 @@ public class SimpleInvertedIndex
 	 */
 	@Override
 	public String toString() {
-		return toJsonString();
+		try {
+			return toJsonString();
+		}
+		catch (Exception e) {
+			System.err.println("Should never run");
+			return null;
+		}
 	}
 	
 	/**
@@ -116,18 +114,19 @@ public class SimpleInvertedIndex
 		}
 		
 		@Override
-		public void writeToJson(Writer writer, int baseIndent) throws IOException {
-			var utility = new JsonWriteableMapWriter<>(
-					this,
-					writer,
-					baseIndent);
-			utility.writeAllElements();
-			
+		public void writeToJson(int baseIndent, Writer writer) throws IOException {
+			JsonMapWriter.writeJsonWriteableMap(baseIndent, writer, this);
 		}
 		
 		@Override
 		public String toString() {
-			return toJsonString();
+			try {
+				return toJsonString();
+			}
+			catch (Exception e) {
+				System.err.println("Should never run");
+				return null;
+			}
 		}
 	}
 	
@@ -153,17 +152,19 @@ public class SimpleInvertedIndex
 		}
 	
 		@Override
-		public void writeToJson(Writer writer, int baseIndent) throws IOException {
-			var utility = new JsonCollectionWriter<>(
-					this,
-					writer,
-					baseIndent);
-			utility.writeAllElements();
+		public void writeToJson(int baseIndent, Writer writer) throws IOException {
+			JsonCollectionWriter.writeCollection(baseIndent, writer, this);
 		}
 		
 		@Override
 		public String toString() {
-			return toJsonString();
+			try {
+				return toJsonString();
+			}
+			catch (Exception e) {
+				System.err.println("Should never run");
+				return null;
+			}
 		}
 	}
 }

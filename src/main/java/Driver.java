@@ -24,7 +24,7 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		Instant start = Instant.now(); // store initial start time
-		Project1Config config = new Project1Config.Factory(args).createFromArgs();
+		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
 		App app = new Project1App(config);
 		app.run();
 		// calculate time elapsed and output

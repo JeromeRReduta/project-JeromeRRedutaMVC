@@ -1,8 +1,8 @@
 package configurations;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,12 +29,11 @@ public class Project1ConfigValidator implements ConfigValidator<Project1Config> 
 
 	@Override
 	public void validate() throws InvalidConfigException {
+		/* For every null object, add the respective name to invalidDependencyNames */
 		crucialDependencies.entrySet().stream()
 			.filter(entry -> entry.getValue() == null)
-			.forEach(entry -> {
-				String nameOfNullDependency = entry.getKey();
-				invalidDependencyNames.add(nameOfNullDependency);
-				});
+			.map(Map.Entry::getKey)
+			.forEach(invalidDependencyNames::add);
 		if (!invalidDependencyNames.isEmpty()) {
 			String message = "The following dependencies are null but shouldn't be: " + invalidDependencyNames
 					+ "\nTerminating program...";

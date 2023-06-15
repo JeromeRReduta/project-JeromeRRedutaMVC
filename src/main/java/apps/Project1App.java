@@ -17,25 +17,24 @@ public class Project1App implements App {
 	
 	private InvertedIndexController controller;
 	
-	private boolean canReadData;
+	private boolean readDataIsRequested;
 	
-	private boolean canDisplayIndexToFile;
+	private boolean outputToFileIsRequested;
 	
 	public Project1App(Project1Config config) {
 		this.stemReader = config.stemReader;
 		this.controller = config.invertedIndexController;
-		this.canReadData = config.sourceFile != null;
-		this.canDisplayIndexToFile = config.outputFile != null;
+		this.readDataIsRequested = config.sourceFile != null;
+		this.outputToFileIsRequested = config.outputFile != null;
 	}
 
 	@Override
 	public void run() {
-		if (canReadData) {
+		if (readDataIsRequested) {
 			stemReader.tryReadingIntoInvertedIndex();
 		}
-		if (canDisplayIndexToFile) {
+		if (outputToFileIsRequested) {
 			controller.tryDisplayingIndex();
 		}
 	}
 }
-

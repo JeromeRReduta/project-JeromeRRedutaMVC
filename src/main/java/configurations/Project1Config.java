@@ -65,13 +65,8 @@ public class Project1Config implements Config {
 	}
 	
 	@Override
-	public void writeToJson(Writer writer, int baseIndent) throws IOException {
-		var utility = new JsonMapWriter<>(
-				configAsMap(),
-				writer,
-				0);
-		utility.writeIndented("CONFIGS: ", 0);
-		utility.writeAllElements();
+	public void writeToJson(int baseIndent, Writer writer) throws IOException {
+		JsonMapWriter.writeMap(0, writer, configAsMap());
 	}
 	
 	private Map<String, Object> configAsMap() {
@@ -97,7 +92,13 @@ public class Project1Config implements Config {
 	
 	@Override
 	public String toString() {
-		return toJsonString();
+		try {
+			return toJsonString();
+		}
+		catch (Exception e) {
+			System.err.println("Should never run");
+			return null;
+		}
 	}
 
 	/**

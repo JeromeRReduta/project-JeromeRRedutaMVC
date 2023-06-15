@@ -2,65 +2,82 @@ package json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Writes a map to JSON format
- * @author JRRed
- *
- * @param <K> key type
- * @param <V> value type
- */
-public class JsonMapWriter<K, V> implements JsonDataStructUtility<Map.Entry<K, V>> {
+public interface JsonMapWriter<K, V> extends JsonWriter {
 
-    private String startingBrace = "{";
-
-    private String endingBrace = "}";
-
-    private Map<K, V> map;
-
-    private Writer writer;
-
-    private int indent;
-
-    public JsonMapWriter(
-            Map<K, V> map,
-            Writer writer,
-            int indent) {
-        this.map = map;
-        this.writer = writer;
-        this.indent = indent;
+    /**
+     * Writes all elements in this map.
+     *
+     * @param baseIndent base indent
+     * @param writer     writer
+     * @param map        map
+     * @throws IOException from write()
+     */
+    default void writeAllElements(int baseIndent, Writer writer, Map<K, V> map)
+            throws IOException {
+        Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+        JsonWriter.writeIndented(0, writer, "{");
+        if (iterator.hasNext()) {
+            JsonWriter.writeIndented(0, writer, JsonWriter.crlf);
+            writeElement(baseIndent + 1, writer, iterator.next());
+        }
+        while (iterator.hasNext()) {
+            JsonWriter.writeIndented(0, writer, "," + JsonWriter.crlf);
+            writeElement(baseIndent + 1, writer, iterator.next());
+        }
+        JsonWriter.writeIndented(0, writer, JsonWriter.crlf);
+        JsonWriter.writeIndented(baseIndent, writer, "}");
     }
 
-    @Override
-    public String getStartingBrace() {
-        return startingBrace;
+    /**
+     * Writes a single entry in this map
+     *
+     * @param baseIndent base indent
+     * @param writer     writer
+     * @param element    element
+     * @throws IOException from write()
+     */
+    void writeElement(int baseIndent, Writer writer, Map.Entry<K, V> element) throws IOException;
+
+    /**
+     * Writes a generic map to JSON
+     *
+     * @param baseIndent base indent
+     * @param writer     writer
+     * @param map        map
+     * @param <X>        key type
+     * @param <Y>        value type
+     * @throws IOException from write()
+     */
+    static <X, Y> void writeMap(int baseIndent, Writer writer, Map<X, Y> map) throws IOException {
+        JsonMapWriter<X, Y> utility = (bI, w, e) -> {
+            String key = e.getKey().toString();
+            String value = e.getValue().toString();
+            JsonWriter.writeIndented(bI, w, "\"" + key + "\": " + value);
+        };
+        utility.writeAllElements(baseIndent, writer, map);
     }
 
-    @Override
-    public String getEndingBrace() {
-        return endingBrace;
-    }
-
-    @Override
-    public Writer getWriter() {
-        return writer;
-    }
-
-    @Override
-    public int getIndent() {
-        return indent;
-    }
-
-    @Override
-    public Iterable<Map.Entry<K, V>> getIterable() {
-        return map.entrySet();
-    }
-
-    @Override
-    public void writeElement(Map.Entry<K, V> element) throws IOException {
-        K key = element.getKey();
-        V value = element.getValue();
-        writeIndented('"' + key.toString() + '"' + ": " + value.toString(), 1);
+    /**
+     * Writes a Map of JsonWriteables. This allows composite writes, e.g. writing a TreeMap of String-InnerMap pairs,
+     * where the InnerMap is made of String-TreeSet(Int) pairs, so long as the InnerMap and TreeSet both
+     * implement JsonWriteable
+     *
+     * @param baseIndent base indent
+     * @param writer     writer
+     * @param map        map
+     * @param <X>        key type
+     * @throws IOException from write()
+     */
+    static <X, Y extends JsonWriteable> void writeJsonWriteableMap(int baseIndent, Writer writer, Map<X, Y> map) throws IOException {
+        JsonMapWriter<X, Y> utility = (bI, w, e) -> {
+            String key = e.getKey().toString();
+            JsonWriteable value = e.getValue();
+            JsonWriter.writeIndented(bI, w, "\"" + key + "\": ");
+            value.writeToJson(bI, w);
+        };
+        utility.writeAllElements(baseIndent, writer, map);
     }
 }

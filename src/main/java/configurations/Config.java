@@ -25,7 +25,7 @@ public interface Config extends JsonWriteable {
 		 * @return a valid config
 		 * @throws InvalidConfigException if the config is invalid, which should end the program
 		 */
-		default C createFromArgs() throws InvalidConfigException {
+		default C createValidatedConfig() throws InvalidConfigException {
 			C config = createConfig();
 			getValidator(config).validate();
 			return config;
