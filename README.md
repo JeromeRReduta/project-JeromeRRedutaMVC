@@ -51,7 +51,7 @@ This signals the following things:
 3. Because the input file is non-null, building the index is requested
 4. Because the output file is non-null, writing to the output file is requested
 
-##Outputs:
+## Outputs:
 If requested, an output file with the inverted index's contents is generated.
 If given the pair -index = (any value), an output file write is requested to the file with the name (any value)
 If given this pair: -index = null, we will output to a default output file
