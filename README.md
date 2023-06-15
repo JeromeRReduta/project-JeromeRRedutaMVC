@@ -8,8 +8,8 @@ few template pages which were sometimes directly relevant (e.g.
 we needed to write an object in JSON format, and SimpleJsonWriter
 did exactly that) and sometimes not so much (e.g. SimpleTextIndex
 gave us an idea of what a forward index looks like, but not how
-an InvertedIndex works). From there we would build up to a fully-
-functioning, multi-threaded, web-app supporting search engine.
+an InvertedIndex works). From there we would build up to a fully-functioning,
+multi-threaded, web-app supporting search engine.
 
 I've learned a lot of new concepts and processes since graduating (e.g. SOLID and MVC architecture),
 so I decided to put it to the test: I'd complete the template pages
