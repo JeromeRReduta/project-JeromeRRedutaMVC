@@ -27,7 +27,7 @@ public class TextFileInvertedIndexController implements InvertedIndexController 
 	}
 	
 	@Override
-	public void tryDisplayingIndex() {
+	public void tryDisplaying() {
 		try {
 			view.writeToFile();
 		}

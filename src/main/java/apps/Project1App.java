@@ -34,7 +34,7 @@ public class Project1App implements App {
 			stemReader.tryReadingIntoInvertedIndex();
 		}
 		if (outputToFileIsRequested) {
-			controller.tryDisplayingIndex();
+			controller.tryDisplaying();
 		}
 	}
 }

@@ -3,6 +3,7 @@ import java.time.Instant;
 
 import apps.App;
 import apps.Project1App;
+import apps.Project1AppWithWorkflows;
 import configurations.Project1Config;
 
 /**
@@ -25,7 +26,7 @@ public class Driver {
 	public static void main(String[] args) {
 		Instant start = Instant.now(); // store initial start time
 		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
-		App app = new Project1App(config);
+		App app = new Project1AppWithWorkflows(config);
 		app.run();
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now()); 

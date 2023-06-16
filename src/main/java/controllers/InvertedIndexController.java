@@ -9,13 +9,10 @@ import java.util.Map;
  * @author JRRed
  *
  */
-public interface InvertedIndexController {
+public interface InvertedIndexController extends JsonWriteableController {
 	
-	/**
-	 * Writes the index to an output. The index and the output source
-	 * are handled by the implementation.
-	 */
-	void tryDisplayingIndex();
+	@Override
+	void tryDisplaying();
 	
 	/**
 	 * Given a stem as key, returns the associated inner map value. To ensure data safety, this method
