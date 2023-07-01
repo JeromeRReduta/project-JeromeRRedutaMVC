@@ -75,43 +75,12 @@ public interface Table<R extends Object, C extends Object, V extends Object> {
 	 */
 	int size();
 	
-	/* TODO:
-	 * 
-	 * Note: Implementations can be extremely simple - don't need to rise to level of google dev for this project
-	 * 
-	 * 1. Finish documentation (and if needed, implementations) of methods - any data gets() should return CLONE
-	 * 2. Copy over implemented methods to some abstract class, e.g. AbstractTable<R, C, V> implements SimpleTable<R, C, V>
-	 * 		All data gets() should return a CLONE
-	 * 3. In SimpleTable, make unimplemented versions of methods we copied over
-	 * 4. Implement TreeTable<R, C, V> extends AbstractTable<R, C, V>
-	 * 5. Create InvertedIndexTable extends TreeTable<String, String, TreeSet<Integer>>,
-	 * 		implements InvertedIndex, JsonWriteable, Cloneable?
-	 * Test InvertedIndexTable by running Project1App w/ it
-	 */
-	
 	@Override
 	boolean equals(Object obj);
 	
 	@Override
 	int hashCode();
-	/*
-	default boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof SimpleTable)) {
-			return false;
-		}
-		@SuppressWarnings("unchecked") // check is above
-		var otherTable = (SimpleTable<Object, Object, Object>)obj;
-		return Objects.hash(this) == Objects.hash(otherTable);
-	}
-	
-	default int hashCode() {
-		return Objects.hash(cellSet());
-	}
-	
-	*/
+
 	/**
 	 * Removes all mappings in this table
 	 */
@@ -137,7 +106,7 @@ public interface Table<R extends Object, C extends Object, V extends Object> {
 	
 	/**
 	 * Returns a view of all mappings with the given row key as columnKey to value pairs.
-	 * Unlike Guava's implementation, this should return a CLONE of the data for data integrity.
+	 * Like Guava's implementation, changing this row changes the backing table.
 	 * @param rowKey key of row
 	 * @return a map of columnKey to value pairs
 	 */
@@ -145,7 +114,7 @@ public interface Table<R extends Object, C extends Object, V extends Object> {
 	
 	/**
 	 * Returns a view of all mappings with the given column key as rowKey to value pairs.
-	 * Unlike Guava's implementation, this should return a CLONE of the data for data integrity.
+	 * Like Guava's implementation, changing this row changes the backing table.
 	 * @param columnKey key of column
 	 * @return a map of rowKey to value pairs
 	 */
@@ -153,43 +122,40 @@ public interface Table<R extends Object, C extends Object, V extends Object> {
 	
 	/**
 	 * Returns a set of all row/column/value triplets. This set will not support add() or addAll().
-	 * Unlike Guava's implementation, this should return a CLONE of the data for data integrity.
+	 * Like Guava's implementation, changing this row changes the backing table.
 	 * @return set of row/column/value triplets, as cells
 	 */
 	Set<Cell<R, C, V>> cellSet();
 	
 	/**
-	 * Returns a set of row keys that have at least one value in the table. Unlike Guava's implementation,
-	 * this should return a CLONE of the data for data integrity.
+	 * Returns a set of row keys that have at least one value in the table. Like Guava's implementation, changing this row changes the backing table.
 	 * @return set of row keys
 	 */
 	Set<R> rowKeySet();
 	
 	/**
-	 * Returns a set of column keys that have at least one value in the table. Unlike Guava's implementation,
-	 * this should return a CLONE of the data for data integrity.
+	 * Returns a set of column keys that have at least one value in the table. Like Guava's implementation, changing this row changes the backing table.
 	 * @return set of column keys
 	 */
 	Set<C> columnKeySet();
 	
 	
 	/**
-	 * Returns a collection of all values. This may return duplicates. Unlike Guava's implmeentation,
-	 * this should return a CLONE of the data for data integrity.
+	 * Returns a collection of all values. This may return duplicates. Like Guava's implementation, changing this row changes the backing table.
 	 * @return collection of values
 	 */
 	Collection<V> values();
 	
 	/**
 	 * Returns a view that associates each row key with the corresponding columnKey to value maps.
-	 * Unlike Guava's implementation, this should return a CLONE of the data for data integrity.
+	 * Like Guava's implementation, changing this row changes the backing table.
 	 * @return a map view from each row key to (columnKey to value) maps
 	 */
 	Map<R, Map<C, V>> rowMap();
 	
 	/**
 	 * Returns a view that associates each column key with the corresponding rowKey to value maps.
-	 * Unlike Guava's implementation, this should return a CLONE of the data for data integrity.
+	 * Like Guava's implementation, changing this row changes the backing table.
 	 * @return a map view from each columnKey to (rowKey to value) maps
 	 */
 	Map<C, Map<R, V>> columnMap();

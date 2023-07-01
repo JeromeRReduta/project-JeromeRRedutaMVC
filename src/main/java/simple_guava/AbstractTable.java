@@ -1,5 +1,6 @@
 package simple_guava;
 
+import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,9 +41,9 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 
 	@Override
 	public boolean containsValue(Object value) {
-		Collection<Map<C, V>> rows = rowMap().values();
-		for (Map<C, V> row : rows) {
-			if (row.containsValue(value)) {
+		Collection<Map<C, V>> columns = rowMap().values();
+		for (Map<C, V> column : columns) {
+			if (column.containsValue(value)) {
 				return true;
 			}
 		}
@@ -86,14 +87,17 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 		return row(rowKey).put(columnKey,  value);
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		return Tables.equalsImpl(this, obj);
 	}
 	
+	@Override
 	public int hashCode() {
 		return cellSet().hashCode();
 	}
 	
+	@Override
 	public String toString() {
 		return rowMap().toString();
 	}
@@ -113,6 +117,7 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 	
 	class CellSet extends AbstractSet<Cell<R, C, V>> {
 		
+		@Override
 		public boolean contains(Object o) {
 			if (o == null) {
 				return false;
@@ -127,6 +132,7 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 					cell);
 		}
 		
+		@Override
 		public boolean remove(Object o) {
 			if (o == null) {
 				return false;
@@ -139,14 +145,17 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 			return Collections2.safeRemove(row.entrySet(), cell);
 		}
 		
+		@Override
 		public void clear() {
 			AbstractTable.this.clear();
 		}
 		
+		@Override
 		public Iterator<Table.Cell<R, C, V>> iterator() {
 			return cellIterator();
 		}
 		
+		@Override
 		public int size() {
 			return AbstractTable.this.size();
 		}
@@ -160,6 +169,38 @@ abstract class AbstractTable <R extends Object, C extends Object, V extends Obje
 			values = new Values();
 		}
 		return values;
+	}
+	
+	Iterator<V> valuesIterator() {
+		Iterator<Cell<R, C, V>> backingIterator = cellSet().iterator();
+		return new TransformedIterator<Cell<R, C, V>, V>(backingIterator) {
+			V transform(Cell<R, C, V> cell) {
+				return cell.getValue();
+			}
+		};
+	}
+	
+	class Values extends AbstractCollection<V> {
+		
+		@Override
+		public Iterator<V> iterator() {
+			return valuesIterator();
+		}
+		
+		@Override
+		public boolean contains(Object o) {
+			return containsValue(o);
+		}
+		
+		@Override
+		public void clear() {
+			AbstractTable.this.clear();
+		}
+		
+		@Override
+		public int size() {
+			return AbstractTable.this.size();
+		}
 	}
 	/**
 	 * TODO: Everything from https://github.com/google/guava/blob/master/android/guava/src/com/google/common/collect/AbstractTable.java#L62
