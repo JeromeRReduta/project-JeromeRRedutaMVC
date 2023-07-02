@@ -24,6 +24,12 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>31.0.1-jre</version>
+		</dependency>
+		
 		<!-- for unit testing -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

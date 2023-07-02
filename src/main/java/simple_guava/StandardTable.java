@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import simple_guava.Maps.IteratorBasedAbstractMap;
 import simple_guava.Sets.ImprovedAbstractSet;
 
 import java.util.LinkedHashMap;
@@ -212,6 +213,117 @@ class StandardTable<R, C, V> extends AbstractTable<R, C, V> {
 	
 	class Row extends IteratorBasedAbstractMap<C, V> {
 		final R rowKey;
+		Map<C, V> backingRowMap;
+		
+		Row(R rowKey) {
+			this.rowKey = rowKey;
+		}
+		
+		final void updateBackingRowMapField() {
+			if (backingRowMap == null
+					|| (backingRowMap.isEmpty() && backingMap.containsKey(rowKey))) {
+				backingRowMap = backingMap.get(rowKey);
+			}
+		}
+		
+		/** Called every time we remove an entry */
+		void maintainEmptyInvariant() {
+			updateBackingRowMapField();
+			if (backingRowMap != null && backingRowMap.isEmpty()) {
+				backingMap.remove(rowKey);
+				backingRowMap = null;
+			}
+		}
+		
+		public boolean containsKey(Object key) {
+			updateBackingRowMapField();
+			return (key != null && backingRowMap != null)
+					&& Maps.safeContainsKey(backingRowMap, key);
+		}
+		
+		public V get(Object key) {
+			return (key != null && backingRowMap != null)
+					? Maps.safeGet(backingRowMap, key)
+					: null;
+		}
+		
+		public V put(C key, V value) {
+			if (key == null || value == null) {
+				return null;
+			}
+			if (backingRowMap != null && !backingRowMap.isEmpty()) {
+				return backingRowMap.put(key, value);
+			}
+			return StandardTable.this.put(rowKey,  key,  value);
+		}
+		
+		public V remove(Object key) {
+			updateBackingRowMapField();
+			if (backingRowMap == null) {
+				return null;
+			}
+			V result = Maps.safeRemove(backingRowMap, key);
+			maintainEmptyInvariant();
+			return result;
+		}
+		
+		public void clear() {
+			updateBackingRowMapField();
+			if (backingRowMap != null) {
+				backingRowMap.clear();
+			}
+			maintainEmptyInvariant();
+		}
+		
+		public int size() {
+			updateBackingRowMapField();
+			return (backingRowMap == null)
+					? 0
+					: backingRowMap.size();
+		}
+
+		@Override
+		Iterator<Entry<C, V>> entryIterator() {
+			updateBackingRowMapField();
+			if (backingRowMap == null) {
+				return Iterators.emptyModifiableIterator();
+			}
+			final Iterator<Entry<C, V>> iterator = backingRowMap.entrySet().iterator();
+			return new Iterator<Entry<C, V>>() {
+				public boolean hasNext() {
+					return iterator.hasNext();
+				}
+				
+				public Entry<C, V> next() {
+					return wrapEntry(iterator.next());
+				}
+				
+				public void remove() {
+					iterator.remove();
+					maintainEmptyInvariant();
+				}
+			};
+		}
+		
+		Entry<C, V> wrapEntry(final Entry<C, V> entry) {
+	      return new ForwardingMapEntry<C, V>() {
+	          @Override
+	          protected Entry<C, V> delegate() {
+	            return entry;
+	          }
+
+	          @Override
+	          public V setValue(V value) {
+	            return super.setValue(checkNotNull(value));
+	          }
+
+	          @Override
+	          public boolean equals(@CheckForNull Object object) {
+	            // TODO(lowasser): identify why this affects GWT tests
+	            return standardEquals(object);
+	          }
+	        };
+		}
 	}
 
 	@Override
@@ -228,12 +340,6 @@ class StandardTable<R, C, V> extends AbstractTable<R, C, V> {
 
 	@Override
 	public Map<C, Map<R, V>> columnMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	Iterator<Cell<R, C, V>> cellIterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

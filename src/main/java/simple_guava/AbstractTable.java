@@ -7,6 +7,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.TreeBasedTable;
+import com.google.common.collect.Table;
+
 /**
  * Skeletal, simple implementation of {@link SimpleTable} interface,
  * which is itself a simple version of Guava's Table

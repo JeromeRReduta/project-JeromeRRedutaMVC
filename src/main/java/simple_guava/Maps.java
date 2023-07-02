@@ -1,9 +1,11 @@
 package simple_guava;
 
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -93,10 +95,73 @@ public final class Maps {
 		}
 	}
 	
-	private class EntrySet extends ForwardingSet<Entry<K, V>> {
-		protected Set<Entry<K, V>> delegate() {
-			return filteredEntrySet;
+	abstract static class EntrySet<K extends Object, V extends Object>
+		extends Sets.ImprovedAbstractSet<Entry<K, V>> {
+		
+		abstract Map<K, V> map();
+		
+		public int size() {
+			return map().size();
 		}
+		
+		public void clear() {
+			map().clear();
+		}
+		
+		public boolean contains(Object o) {
+			if (o == null || !(o instanceof Entry)) {
+				return false;
+			}
+			Entry<?, ?> entry = (Entry<?, ?>) o;
+			Object key = entry.getKey();
+			V value = Maps.safeGet(map(), key);
+			return Objects.equals(value, entry.getValue())
+					&& (value != null || map().containsKey(key));
+		}
+		
+		public boolean isEmpty() {
+			return map().isEmpty();
+		}
+		
+		public boolean remove(Object o) {
+			if (contains(o) && o instanceof Entry) {
+				Entry<?, ?> entry = (Entry<?, ?>) o;
+				var key = entry.getValue();
+				return map().keySet().remove(key);
+			}
+			return false;
+		}
+		
+		public boolean removeAll(Collection<?> c) {
+			if (c == null) {
+				return false;
+			}
+			try {
+				return super.removeAll(c);
+			}
+			catch (UnsupportedOperationException e) {
+				return false; // normally this does Sets.removeAllImpl(this, c.iterator() but I see no reasons to implement that here
+			}
+		}
+		
+		public boolean retainAll(Collection<?> c) {
+			if (c == null) {
+				return false;
+			}
+			try {
+				return super.retainAll(c);
+			}
+			catch (UnsupportedOperationException e) {
+				return false; // just returning false here for simplicity's sake
+			}
+		}
+		
+		// TODO: Line 4316 in Maps
+		
 	}
+	
 
+	
+	
+	
 }
