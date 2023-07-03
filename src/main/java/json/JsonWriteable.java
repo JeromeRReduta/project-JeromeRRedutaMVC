@@ -24,9 +24,14 @@ public interface JsonWriteable {
 	 * @return internal data as a JSON-formatted string
 	 * @throws IOException for write()
 	 */
-	default String toJsonString() throws IOException {
-		Writer writer = new StringWriter();
-		writeToJson(0, writer);
-		return writer.toString();
+	default String toJsonString() {
+		try {
+			Writer writer = new StringWriter();
+			writeToJson(0, writer);
+			return writer.toString();
+		}
+		catch (IOException e) {
+			return null;
+		}
 	}
 }

@@ -9,6 +9,12 @@ import json.JsonCollectionWriter;
 import json.JsonMapWriter;
 import json.JsonWriteable;
 
+/**
+ * A simple InvertedIndex implementation.
+ * @deprecated All shall be tables. Only tables.
+ * @author JRRed
+ *
+ */
 public class SimpleInvertedIndex
 	extends TreeMap<String, data.SimpleInvertedIndex.FileNamePositionMap>
 	implements InvertedIndex {
@@ -158,13 +164,7 @@ public class SimpleInvertedIndex
 		
 		@Override
 		public String toString() {
-			try {
-				return toJsonString();
-			}
-			catch (Exception e) {
-				System.err.println("Should never run");
-				return null;
-			}
+			return toJsonString();
 		}
 	}
 }

@@ -27,6 +27,7 @@ import views.InvertedIndexView;
  * @author JRRed
  *
  */
+@SuppressWarnings("deprecation") // We use SimpleInvertedIndex in createInvalid()
 public class Project1Config implements Config {
 	
 	public final Path sourceFile;
@@ -93,13 +94,7 @@ public class Project1Config implements Config {
 	
 	@Override
 	public String toString() {
-		try {
-			return toJsonString();
-		}
-		catch (Exception e) {
-			System.err.println("Should never run");
-			return null;
-		}
+		return toJsonString();
 	}
 
 	/**

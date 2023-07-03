@@ -9,22 +9,45 @@ import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 
 import json.JsonCollectionWriter;
-import json.JsonMapWriter;
 import json.JsonTableWriter;
-import json.JsonWriteable;
-import json.JsonWriter;
 
+
+/* TODO:
+ * (x) 1. Formatting + documentation for:
+ * 	InvIndexTable
+ *	JsonTableWriter
+ *
+ *	(x) 1.5. Deprecate all other forms of InvertedIndex not based on tables
+ *
+ *	(x) 2. Organize import
+ *
+ *	3. See if you can rename this to Project 1.5 - Project 1 w/ Tables
+ *
+ *	4. Make CRC cards
+ *
+ *	5. Add CRC cards to README
+ */
+
+/**
+ * Table-based implementation of an InvertedIndex, backed by Guava's TreeBasedTable.
+ * @author JRRed
+ *
+ */
 public class InvertedIndexTable implements InvertedIndex {
 	
 	private Table<String, String, TreeSet<Integer>> backingTable;
+	/** Defines how this class writes its values. In this case, b/c our value is
+	 * 	a treeset of ints, we use JsonCollectionWriter.writeCollection()
+	 */
+	private JsonTableWriter<String, String, TreeSet<Integer>> tableWriter;
 	
 	public InvertedIndexTable() {
 		backingTable = TreeBasedTable.create();
+		tableWriter = JsonCollectionWriter::writeCollection;
 	}
 
 	@Override
 	public void writeToJson(int baseIndent, Writer writer) throws IOException {
-		JsonTableWriter<String, String, TreeSet<Integer>> tableWriter = JsonCollectionWriter::writeCollection;
 		tableWriter.writeAllElements(baseIndent, writer, backingTable);
 	}
 
@@ -41,11 +64,8 @@ public class InvertedIndexTable implements InvertedIndex {
 		return backingTable.row(stem);
 	}
 	
+	@Override
 	public String toString() {
-		try {
-			return toJsonString();
-		} catch (IOException e) {
-			return null;
-		}
+		return toJsonString();
 	}
 }
