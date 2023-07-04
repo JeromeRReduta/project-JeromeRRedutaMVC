@@ -56,7 +56,7 @@ public class TextFileFinder implements TextSourceFinder<Path> {
 	 * @return all valid files in the given directory
 	 */
 	private Collection<Path> getSourcesFromDirectory() throws IOException {
-		return Files.walk(dataSource,  FileVisitOption.FOLLOW_LINKS)
+		return Files.walk(dataSource, FileVisitOption.FOLLOW_LINKS)
 				.filter(IS_TEXT)
 				.collect(Collectors.toList());
 	}

@@ -10,8 +10,8 @@ import argument_parsing.ArgumentMap;
 import controllers.InvertedIndexController;
 import controllers.TextFileInvertedIndexController;
 import data.InvertedIndex;
-import data.InvertedIndexTable;
 import data.SimpleInvertedIndex;
+import data.SimpleInvertedIndexTable;
 import json.JsonMapWriter;
 import stem_reading.StemReader;
 import stem_reading.TextFileStemReader;
@@ -112,7 +112,7 @@ public class Project1Config implements Config {
 		private final Path defaultOutputFile = Path.of("index.json");
 		private final Path noTextFlagOutputFile = null;
 		private final TextStemmer<Path> stemmer = new TextFileStemmer();
-		private final InvertedIndex index = new InvertedIndexTable();
+		private final InvertedIndex index = new SimpleInvertedIndexTable();
 		
 		/** Dynamically assigned vars and dependencies - either chosen from commandline args or depending on something chosen from commandline args */
 		private final Path sourceFile;
