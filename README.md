@@ -13,7 +13,7 @@ SimpleInvertedIndex is deprecated. All shall be tables.
 A new set of modules have been added: JsonWriteableTable, AbstractStemAndFileTable, SimpleInvertedIndexTable,
 and JsonTableWriter.
 
-#CRC Model:
+# CRC Model:
 The exact same as Project 1 - it's the implementations, not the interfaces or how they collaborate with each other, that are different.
 I'll put it [here](https://lucid.app/lucidchart/7fe9eb7c-befc-41dc-a8d5-ffd00daeb6d8/edit?invitationId=inv_3850d397-fcf1-4a9d-9ffd-25499cddf566&page=0_0#)
 for reference.
