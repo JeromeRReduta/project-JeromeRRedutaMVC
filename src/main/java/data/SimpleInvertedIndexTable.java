@@ -5,23 +5,6 @@ import java.util.TreeSet;
 
 import json.JsonCollectionWriter;
 
-
-/* TODO:
- * (x) 1. Formatting + documentation for:
- * 	InvIndexTable
- *	JsonTableWriter
- *
- *	(x) 1.5. Deprecate all other forms of InvertedIndex not based on tables
- *
- *	(x) 2. Organize import
- *
- *	(x) 3. See if you can rename this to Project 1.5 - Project 1 w/ Tables
- *
- *	(x) 4. Make CRC cards
- *
- *	5. Add CRC cards to README
- */
-
 /**
  * Implementation of both an InvetedIndex and an AbstractStemAndFileNameTable
  * @author JRRed
