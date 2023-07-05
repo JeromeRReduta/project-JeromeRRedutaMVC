@@ -1,4 +1,4 @@
-#Project 1.5 - We Have Tables Now
+# Project 1.5 - We Have Tables Now
 
 I thought a lot about what kind of data structure would hold an index, and stumbled into the idea of a table.
 After some research, I found Google's devs already implemented a table collection, and challenged myself to create a
@@ -7,7 +7,7 @@ required to reproduce something made by a team of Google developers, and I just 
 
 I learned a ton from it though, and it led to this project being born.
 
-##Changes:
+## Changes:
 SimpleInvertedIndex is deprecated. All shall be tables.
 
 A new set of modules have been added: JsonWriteableTable, AbstractStemAndFileTable, SimpleInvertedIndexTable,
