@@ -56,3 +56,6 @@ If requested, an output file with the inverted index's contents is generated.
 If given the pair -index = (any value), an output file write is requested to the file with the name (any value)
 If given this pair: -index = null, we will output to a default output file
 
+## CRC model:
+I made a CRC model. Link is [here](https://lucid.app/lucidchart/7fe9eb7c-befc-41dc-a8d5-ffd00daeb6d8/edit?viewport_loc=-4800%2C-3794%2C10175%2C4944%2C0_0&invitationId=inv_3850d397-fcf1-4a9d-9ffd-25499cddf566).
+
