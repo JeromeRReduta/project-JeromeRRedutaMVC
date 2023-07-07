@@ -45,4 +45,9 @@ public class TextFileInvertedIndexController implements InvertedIndexController 
 	public Map<String, ? extends Collection<Integer>> get(String stem) {
 		return model.get(stem);
 	}
+
+	@Override
+	public InvertedIndex snapshot() {
+		reutrn model.snapshot();
+	}
 }
