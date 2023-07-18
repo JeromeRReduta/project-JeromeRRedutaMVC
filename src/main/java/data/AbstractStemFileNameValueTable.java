@@ -19,18 +19,12 @@ public abstract class AbstractStemFileNameValueTable<V>
 	
 	protected RowSortedTable<String, String, V> backingTable;
 	
-	public JsonTableWriter<String, String, V> valueWritingStrategy;
-	
-	public AbstractStemFileNameValueTable(
-			JsonTableWriter<String, String, V> valueWritingStrategy) {
-		this(TreeBasedTable.create(), valueWritingStrategy);
+	public AbstractStemFileNameValueTable(){
+		this(TreeBasedTable.create());
 	}
 	
-	public AbstractStemFileNameValueTable(
-			RowSortedTable<String, String, V> backingTable,
-			JsonTableWriter<String, String, V> valueWritingStrategy) {
+	public AbstractStemFileNameValueTable(RowSortedTable<String, String, V> backingTable) {
 		this.backingTable = backingTable;
-		this.valueWritingStrategy = valueWritingStrategy;
 	}
 
 	@Override
@@ -127,11 +121,5 @@ public abstract class AbstractStemFileNameValueTable<V>
 	@Override
 	public Map<String, Map<String, V>> columnMap() {
 		return backingTable.columnMap();
-	}
-
-	@Override
-	public void writeToJson(int baseIndent, Writer writer) throws IOException {
-		valueWritingStrategy.writeAllElements(baseIndent, writer, backingTable);
-		
 	}
 }

@@ -1,17 +1,19 @@
 package data;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeSet;
 
 import json.JsonCollectionWriter;
+import json.JsonTableWriter;
 
 public class InvertedIndexTable 
 	extends AbstractStemFileNameValueTable<TreeSet<Integer>>
 	implements InvertedIndex {
 
 	public InvertedIndexTable() {
-		super(JsonCollectionWriter::writeCollection);
 	}
 
 	@Override
@@ -37,5 +39,17 @@ public class InvertedIndexTable
 	@Override
 	public Map<String, ? extends Collection<Integer>> get(String stem) {
 		return super.row(stem);
+	}
+	
+	@Override
+	public String toString() {
+		return toJsonString();
+	}
+
+	@Override
+	public void writeToJson(int baseIndent, Writer writer) throws IOException {
+		JsonTableWriter<String, String, TreeSet<Integer>> tableWriter
+			= JsonCollectionWriter::writeCollection;
+		tableWriter.writeAllElements(baseIndent, writer, backingTable);
 	}
 }

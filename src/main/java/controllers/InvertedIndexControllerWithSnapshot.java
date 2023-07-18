@@ -1,12 +1,10 @@
 package controllers;
 
-public interface InvertedIndexControllerWithSnapshot {
+import java.util.TreeSet;
+
+import com.google.common.collect.RowSortedTable;
+
+public interface InvertedIndexControllerWithSnapshot extends JsonWriteableController {
 	
-	/**
-	 * Writes the index to an output. The index and the output source
-	 * are handled by the implementation.
-	 */
-	void tryDisplayingIndex();
-	
-	InvertedIndexControllerWithSnapshot snapshot();
+	RowSortedTable<String, String, TreeSet<Integer>> snapshot();
 }

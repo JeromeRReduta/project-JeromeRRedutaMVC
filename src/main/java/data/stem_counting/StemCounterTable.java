@@ -1,14 +1,21 @@
 package data.stem_counting;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Map;
 
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.TreeBasedTable;
 
 import data.AbstractStemFileNameValueTable;
 import data.StemFileNameValueTable;
+import json.JsonCollectionWriter;
+import json.JsonMapWriter;
+import json.JsonTableWriter;
 import json.JsonWriter;
 
 public class StemCounterTable
@@ -18,7 +25,6 @@ public class StemCounterTable
 	private Map<String, Integer> stemCountsByFile;
 	
 	public StemCounterTable() {
-		super((bI, w, e) -> JsonWriter.writeIndented(bI, w, e.toString()));
 		this.stemCountsByFile = new TreeMap<>();
 	}
 
@@ -30,12 +36,19 @@ public class StemCounterTable
 		});
 		return snapshot;
 	}
+	
+	@Override
+	public Integer put(String stem, String fileName, Integer count) {
+		Integer originalValue = super.get(stem, fileName);
+		super.put(stem,  fileName, count);
+		stemCountsByFile.putIfAbsent(fileName, 0);
+		stemCountsByFile.merge(fileName,  count,  (a, b) -> a + b);
+		return originalValue;
+	}
 
 	@Override
 	public void add(String stem, String fileName, int count) {
-		super.put(stem, fileName, count);
-		stemCountsByFile.putIfAbsent(fileName, 0);
-		stemCountsByFile.merge(fileName, count, (a, b) -> a + b);
+		put(stem, fileName, count);
 	}
 
 	@Override
@@ -49,7 +62,24 @@ public class StemCounterTable
 		return new TreeMap<>(stemCountsByFile);
 	}
 	
+	@Override
+	public void writeToJson(int baseIndent, Writer writer) throws IOException {
+		JsonMapWriter.writeMap(baseIndent, writer, stemCountsByFile);
+	}
+
+	@Override
 	public String toString() {
-		return toJsonString();
+		try {
+			Writer writer = new StringWriter();
+			JsonTableWriter<String, String, Integer> tableWriter = (bI, w, e) -> JsonWriter.writeIndented(bI, writer, e.toString());
+			tableWriter.writeAllElements(0, writer, backingTable);
+			writer.write("__________________________________\n");
+			writer.write("Totals by filename: \n");
+			JsonMapWriter.writeMap(0, writer, stemCountsByFile);
+			return writer.toString();
+		}
+		catch (IOException e) {
+			return null;
+		}
 	}
 }

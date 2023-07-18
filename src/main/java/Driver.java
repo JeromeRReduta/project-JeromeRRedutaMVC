@@ -1,5 +1,8 @@
 import java.time.Duration;
+
+import data.InvertedIndexTable;
 import java.time.Instant;
+import java.util.TreeSet;
 
 import apps.App;
 import apps.Project1App;
@@ -8,6 +11,7 @@ import configurations.Project1Config;
 
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
+import table_value_transforming.TableValueTransformer;
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
@@ -32,10 +36,11 @@ public class Driver {
 		app.run();
 		
 		StemCounter counter = new StemCounterTable();
-		counter.add("a", "b.txt", 15);
-		counter.add("a", "b.txt", 25);
-		counter.add("b", "b.txt", 15);
+		TableValueTransformer<TreeSet<Integer>, Integer> transformer = TreeSet::size;
+		transformer.transform((InvertedIndexTable)config.invertedIndex, (StemCounterTable)counter);
+		System.out.println(config.invertedIndex);
 		System.out.println(counter);
+		
 		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now()); 
