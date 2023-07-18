@@ -24,11 +24,11 @@ public class StemCounterTable
 
 	@Override
 	public StemFileNameValueTable<Integer> snapshot() {
-		StemCounterTable clone = new StemCounterTable();
+		StemCounterTable snapshot = new StemCounterTable();
 		cellSet().forEach( cell -> {
-			clone.add(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+			snapshot.add(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
 		});
-		return clone;
+		return snapshot;
 	}
 
 	@Override
@@ -47,5 +47,9 @@ public class StemCounterTable
 	@Override
 	public Map<String, Integer> snapshotOfStemCountsByFile() {
 		return new TreeMap<>(stemCountsByFile);
+	}
+	
+	public String toString() {
+		return toJsonString();
 	}
 }

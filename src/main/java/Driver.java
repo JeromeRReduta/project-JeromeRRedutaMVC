@@ -6,6 +6,8 @@ import apps.Project1App;
 import apps.Project1AppWithWorkflows;
 import configurations.Project1Config;
 
+import data.stem_counting.StemCounter;
+import data.stem_counting.StemCounterTable;
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
@@ -28,6 +30,13 @@ public class Driver {
 		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
 		App app = new Project1AppWithWorkflows(config);
 		app.run();
+		
+		StemCounter counter = new StemCounterTable();
+		counter.add("a", "b.txt", 15);
+		counter.add("a", "b.txt", 25);
+		counter.add("b", "b.txt", 15);
+		System.out.println(counter);
+		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now()); 
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
