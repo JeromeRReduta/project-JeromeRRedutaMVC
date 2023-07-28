@@ -2,6 +2,7 @@ package data.search_results;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Comparator;
 
 import json.JsonWriteable;
 import json.JsonWriter;
@@ -13,6 +14,8 @@ public class SimpleSearchResult implements SearchResult {
 	private double matches;
 	
 	private double score;
+	
+	public static final SearchResult.Factory FACTORY = SimpleSearchResult::new;
 	
 	private SimpleSearchResult(
 			String where,
@@ -55,5 +58,10 @@ public class SimpleSearchResult implements SearchResult {
 	@Override
 	public SimpleSearchResult clone() {
 		return new SimpleSearchResult(where, matches, score);
+	}
+
+	@Override
+	public int compareTo(SearchResult o) {
+		return COMPARATOR.compare(this, o);
 	}
 }

@@ -13,6 +13,8 @@ public interface SearchResultIndex extends JsonWriteable {
 			double stemCount,
 			double matches) {
 		double score = matches/stemCount;
+		System.out.println(matches + " / " + stemCount);
+		System.out.println("SCORE: " + score);
 		SearchResult result = factory().create(fileName, stemCount, score);
 		add(query, result);
 	}

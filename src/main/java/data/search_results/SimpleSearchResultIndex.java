@@ -37,13 +37,19 @@ public class SimpleSearchResultIndex implements SearchResultIndex {
 	@Override
 	public Map<String, ? extends Collection<SearchResult>> snapshot() {
 		Map<String, TreeSet<SearchResult>> snapshot = new TreeMap<String, TreeSet<SearchResult>>();
-		searchResults.forEach((query, treeSet) ->
+		searchResults.forEach((query, treeSet) -> addTreeSetCloneToSnapshot(snapshot, query, treeSet));
+		return snapshot;
+	}
+	
+	private void addTreeSetCloneToSnapshot(
+		Map<String, TreeSet<SearchResult>> snapshot,
+		String query,
+		TreeSet<SearchResult> treeSet) {
 			treeSet.forEach(result -> {
 				snapshot.putIfAbsent(query, new TreeSet<>());
 				snapshot.get(query).add(result.clone());
-			}));
-		return snapshot;
-	}
+			});
+		}
 	
 	@Override
 	public void writeToJson(int baseIndent, Writer writer) throws IOException {
