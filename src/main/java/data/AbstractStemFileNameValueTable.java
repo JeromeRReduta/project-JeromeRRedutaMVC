@@ -1,7 +1,5 @@
 package data;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +9,6 @@ import java.util.SortedSet;
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
-
-import json.JsonTableWriter;
 
 public abstract class AbstractStemFileNameValueTable<V>
 	implements StemFileNameValueTable<V> {

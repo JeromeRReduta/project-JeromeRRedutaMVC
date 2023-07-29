@@ -1,21 +1,18 @@
 package stem_counter_searching;
 
-import static org.junit.jupiter.api.DynamicTest.stream;
-import java.util.HashMap;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-
-import data.search_results.SearchResult;
 import data.search_results.SearchResultIndex;
 import data.stem_counting.StemCounter;
 import stem_reading.text_stemming.TextStemmer;
@@ -28,7 +25,7 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	
 	private Path queries;
 	
-	private TextStemmer<Path> stemmer;
+	private TextStemmer<String> stemmer;
 	
 	private SearchResultIndex index;
 	
@@ -36,7 +33,7 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	public SimpleStemCounterSearcher(
 			StemCounter stemCounter,
 			Path queries,
-			TextStemmer<Path> stemmer,
+			TextStemmer<String> stemmer,
 			SearchResultIndex index) {
 		this.stemCounterSnapshot = stemCounter.snapshotOfStemCountTable();
 		this.stemCountByFileNameSnapshot = stemCounter.snapshotOfStemCountsByFile();
@@ -47,12 +44,39 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 
 	@Override
 	public void searchStemCounter() throws IOException {
-		
-		System.out.println(stemmer.uniqueStems(queries)); /** THE BUG IS HERE - unique stems doesn't leave lines together, it splits them up */
+		/*
+		System.out.println(stemmer.uniqueStems(queries)); 
 		stemmer.uniqueStems(queries)
 			.stream()
 			.forEach(queryLine ->
 				stemCounterSnapshot.columnKeySet().forEach(fileName -> addNonZeroSearchResult(queryLine, fileName)));
+		
+		*/
+		
+		try (BufferedReader reader = Files.newBufferedReader(queries)) {
+			reader.lines()
+				.map(this::safeUniqueStems)
+				.filter(stems -> !stems.isEmpty())
+				.forEach(this::searchStemCounter);
+		}
+	}
+	
+	private Collection<String> safeUniqueStems(String line) {
+		try {
+			return stemmer.uniqueStems(line);
+		}
+		catch (Exception e) {
+			System.err.println("Should NEVER RUN");
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	private void searchStemCounter(Collection<String> queryStems) {
+		System.out.println(queryStems);
+		/** TODO: Implement exact search here
+		 * Then implement partial search
+		 * Then make something to toggle between the two
+		 */
 	}
 	
 	private void addNonZeroSearchResult(String queryLine, String fileName) {

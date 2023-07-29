@@ -1,25 +1,29 @@
 import java.nio.file.Path;
 import java.time.Duration;
-
-import data.InvertedIndexTable;
-import data.search_results.SearchResult;
-import data.search_results.SearchResultIndex;
-import data.search_results.SimpleSearchResult;
-import data.search_results.SimpleSearchResultIndex;
-
 import java.time.Instant;
 import java.util.TreeSet;
-
 import apps.App;
 import apps.Project1App;
 import apps.Project1AppWithWorkflows;
+
 import argument_parsing.ArgumentMap;
 import configurations.Project1Config;
+import data.InvertedIndexTable;
+import data.search_results.SimpleSearchResult;
+import data.search_results.SimpleSearchResultIndex;
+import stem_reading.text_stemming.TextStemmer;
+import table_value_transforming.TableValueTransformer;
 
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
+
+import data.search_results.SearchResultIndex;
+
+import stem_counter_searching.StemCounterSearcher;
 import stem_counter_searching.SimpleStemCounterSearcher;
-import table_value_transforming.TableValueTransformer;
+
+import stem_reading.text_stemming.TextLineStemmer;
+
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
@@ -38,6 +42,21 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 */
 	public static void main(String[] args) {
+		/*
+		 * Figured it out:
+		 * 
+		 * The stemmer works as intended
+		 * I didn't actually understand how query reading and stemming was supposed to be done
+		 * When reading stems for the index, we want to read the whole file at once
+		 * 	- That way, we can keep track of the position of each stem as a whole
+		 * When reading stems for the query file, we want to read the file LINE BY LINE
+		 * 	- We don't need to keep track of position of each stem
+		 * 	- We DO need to know what the joined query line looks like, and search based off each
+		 * 			line
+		 * 
+		 * So in reality, need to change our searcher to read the query file line by line
+		 */
+		
 		Instant start = Instant.now(); // store initial start time
 		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
 		App app = new Project1AppWithWorkflows(config);
@@ -50,7 +69,7 @@ public class Driver {
 
 		SearchResultIndex index = new SimpleSearchResultIndex(SimpleSearchResult.FACTORY);
 		var queries = new ArgumentMap(args).getPath("-query", null);
-		var b = new SimpleStemCounterSearcher(counter, queries, config.textStemmer, index);
+		var b = new SimpleStemCounterSearcher(counter, queries, new TextLineStemmer(), index);
 		b.trySearchingStemCounter();
 		System.out.println(index);
 		
@@ -59,5 +78,6 @@ public class Driver {
 		Duration elapsed = Duration.between(start, Instant.now()); 
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
 		System.out.printf("Elapsed: %f seconds%n", seconds);
+		
 	}
 }

@@ -1,7 +1,6 @@
 package table_value_transforming;
 
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 
 /**
  * Adds cells with transformed values from one table to another

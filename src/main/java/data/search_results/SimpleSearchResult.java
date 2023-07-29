@@ -2,9 +2,7 @@ package data.search_results;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Comparator;
 
-import json.JsonWriteable;
 import json.JsonWriter;
 
 public class SimpleSearchResult implements SearchResult {

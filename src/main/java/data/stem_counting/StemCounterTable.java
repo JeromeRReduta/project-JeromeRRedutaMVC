@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
-
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.TreeBasedTable;
 
 import data.AbstractStemFileNameValueTable;
 import data.StemFileNameValueTable;
-import json.JsonCollectionWriter;
 import json.JsonMapWriter;
 import json.JsonTableWriter;
 import json.JsonWriter;
