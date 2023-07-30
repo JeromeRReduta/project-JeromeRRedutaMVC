@@ -60,6 +60,7 @@ public class Driver {
 		Instant start = Instant.now(); // store initial start time
 		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
 		App app = new Project1AppWithWorkflows(config);
+		String[] thing = new String[] {"a", "b"};
 		app.run();
 		
 		

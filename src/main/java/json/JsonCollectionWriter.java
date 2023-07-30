@@ -5,6 +5,8 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 
+import data.search_results.SimpleSearchResult;
+
 public interface JsonCollectionWriter<E> extends JsonWriter {
 
     /**
@@ -60,8 +62,8 @@ public interface JsonCollectionWriter<E> extends JsonWriter {
      * @param collection collection
      * @throws IOException from write()
      */
-    static void writeJsonWriteableCollection(int baseIndent, Writer writer, Collection<JsonWriteable> collection) throws IOException {
-        JsonCollectionWriter<JsonWriteable> utility = (bI, w, e) -> e.writeToJson(bI, w);
+    static <J extends JsonWriteable> void writeJsonWriteableCollection(int baseIndent, Writer writer, Collection<J> collection) throws IOException {
+        JsonCollectionWriter<J> utility = (bI, w, e) -> e.writeToJson(bI, w);
         utility.writeAllElements(baseIndent, writer, collection);
     }
 }

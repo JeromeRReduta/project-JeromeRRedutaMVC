@@ -41,7 +41,7 @@ public class SimpleSearchResult implements SearchResult {
 	
 	@Override
 	public void writeToJson(int baseIndent, Writer writer) throws IOException {
-		JsonWriter.writeIndented(0, writer, "{" + JsonWriter.crlf);
+		JsonWriter.writeIndented(baseIndent, writer, "{" + JsonWriter.crlf);
 		JsonWriter.writeIndented(baseIndent + 1, writer, "where: \"" + where + "\"" + JsonWriter.crlf);
 		JsonWriter.writeIndented(baseIndent + 1, writer, "matches: " + matches + JsonWriter.crlf);
 		JsonWriter.writeIndented(baseIndent + 1, writer, "score: " + score + JsonWriter.crlf);

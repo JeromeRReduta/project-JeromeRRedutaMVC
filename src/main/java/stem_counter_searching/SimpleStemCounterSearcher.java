@@ -72,90 +72,57 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	}
 	
 	private void searchStemCounter(Collection<String> queryStems) {
-		System.out.println(queryStems);
-		/** TODO: Implement exact search here
-		 * Then implement partial search
-		 * Then make something to toggle between the two
-		 */
+		stemCounterSnapshot.columnMap().entrySet().stream()
+			.map(entry -> new ExactQueryInfo(entry, queryStems))
+			.filter(exactQueryInfo -> exactQueryInfo.matches > 0)
+			.forEach(ExactQueryInfo::addInfoToIndex);
 	}
 	
-	private void addNonZeroSearchResult(String queryLine, String fileName) {
-		SearchInfo info = new SearchInfo(queryLine, fileName, stemCounterSnapshot,
-				stemCountByFileNameSnapshot);
-		if (info.stemCount == 0) {
-			return;
-		}
-		index.add(queryLine, fileName, info.stemCount, info.matches);
-	}
-	
-	
-	class SearchInfo {
+	class ExactQueryInfo {
 		
-		private String[] queryTokens;
+		private String fileName;
+
+		private String queryAsLine;
 		
 		private double matches;
 		
-		private double stemCount;
+		private double score;
 		
-		SearchInfo(
-				String queryLine,
-				String fileName,
-				RowSortedTable<String, String, Integer> stemCounterSnapshot,
-				Map<String, Integer> stemCountByFileNameSnapshot) {
-			
-			this.queryTokens = queryLine.split(" ");
-			this.matches = stemCounterSnapshot.columnMap().entrySet().stream()
-				.filter(this::queriesContainsStem)
-				.mapToDouble(entry -> entry.getValue().get(fileName))
-				.sum();
-			System.out.println("MATCHERS: " + matches);
-			
-			Map<String, Integer> column = stemCounterSnapshot.column(fileName);
-			Map<String, Double> matchCounts = new HashMap<>();
-			for (String token : queryTokens) {
-				matchCounts.put(token, (double)column.getOrDefault(token, 0));
-			}
-			System.out.println(column);
-			System.out.println(Arrays.toString(queryTokens));
-			System.out.println(matchCounts);
-			
-			/* Time: 0.112s */
-			
-			/* Time w/ hashmap approach */
-			/*
-			stemCounterSnapshot.columnMap().entrySet().stream()
-				.filter(this::queriesContainsStem)
-				*/
-				/** map to values, then filter out null results */
-			/*
-				.mapToDouble(entry -> {
-					String stem = entry.getKey();
-					return stemCounterSnapshot.get(stem, fileName);
-				})
-				.forEach(System.out::println);
-				*/
-				
-			this.stemCount = Optional.ofNullable(stemCountByFileNameSnapshot.get(fileName)).orElse(0);
+		private static final String BRACKET_REGEX = "[\\[\\]]";
 		
+		private ExactQueryInfo(
+				Map.Entry<String, Map<String, Integer>> columnMapEntry,
+				Collection<String> queryStems) {
+			this.fileName = columnMapEntry.getKey();
+			this.queryAsLine = queryStems.toString().replaceAll(BRACKET_REGEX, "");
+			Map<String, Integer> stemsInFile = columnMapEntry.getValue();
+			this.matches = 0;
+			queryStems.forEach(stem -> safeIncrementMatches(stem, stemsInFile));
+			this.score = this.matches/stemCountByFileNameSnapshot.get(this.fileName);
 		}
-		/*
-		private boolean queriesContainsStem(Map.Entry<String, Integer> stemMatchPair) {
-			for (String query : queries) {
-				if (query.equalsIgnoreCase(stemMatchPair.getKey())) {
-					return true;
-				}
-			}
-			return false;
-		}
-		*/
 		
-		private boolean queriesContainsStem(Map.Entry<String, Map<String, Integer>> entry) {
-			for (String query : queryTokens) {
-				if (query.equalsIgnoreCase(entry.getKey())) {
-					return true;
-				}
-			}
-			return false;
+		void safeIncrementMatches(String stem, Map<String, Integer> stemsInFile) {
+			Integer numOfStemInFile = stemsInFile.get(stem);
+			this.matches += numOfStemInFile != null
+					? numOfStemInFile
+					: 0;
+		}
+		
+		void addInfoToIndex() {
+			index.add(queryAsLine, fileName, score, matches);
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("{\n"
+					+ "\tquery as line: %s\n"
+					+ "\tmatches: %f\n"
+					+ "\tscore: %f\n"
+					+ "}\n",
+					queryAsLine,
+					matches,
+					score);
+					
 		}
 	}
 }

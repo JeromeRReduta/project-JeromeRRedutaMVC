@@ -55,7 +55,7 @@ public class SimpleSearchResultIndex implements SearchResultIndex {
 	public void writeToJson(int baseIndent, Writer writer) throws IOException {
 		JsonMapWriter<String, TreeSet<SearchResult>> mapWriter = (bI, w, e) -> {
 			JsonWriter.writeIndented(bI, w, "\"" + e.getKey() + "\": ");
-			JsonCollectionWriter.writeCollection(bI, w, e.getValue());
+			JsonCollectionWriter.writeJsonWriteableCollection(baseIndent + 1, writer, e.getValue());
 		};
 		mapWriter.writeAllElements(baseIndent, writer, searchResults);
 	}
