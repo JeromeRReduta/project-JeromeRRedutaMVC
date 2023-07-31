@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import data.search_results.SearchResult.Factory;
 import json.JsonCollectionWriter;
 import json.JsonMapWriter;
 import json.JsonWriter;
@@ -16,22 +15,14 @@ public class SimpleSearchResultIndex implements SearchResultIndex {
 	
 	private Map<String, TreeSet<SearchResult>> searchResults;
 	
-	private SearchResult.Factory factory;
-	
-	public SimpleSearchResultIndex(SearchResult.Factory factory) {
+	public SimpleSearchResultIndex() {
 		this.searchResults = new TreeMap<>();
-		this.factory = factory;
 	}
 
 	@Override
 	public void add(String query, SearchResult result) {
 		searchResults.putIfAbsent(query, new TreeSet<SearchResult>());
 		searchResults.get(query).add(result);
-	}
-
-	@Override
-	public Factory factory() {
-		return factory;
 	}
 
 	@Override

@@ -1,28 +1,19 @@
-import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.TreeSet;
-import apps.App;
-import apps.Project1App;
-import apps.Project1AppWithWorkflows;
 
+import apps.App;
+import apps.Project1AppWithWorkflows;
 import argument_parsing.ArgumentMap;
 import configurations.Project1Config;
 import data.InvertedIndexTable;
-import data.search_results.SimpleSearchResult;
-import data.search_results.SimpleSearchResultIndex;
-import stem_reading.text_stemming.TextStemmer;
-import table_value_transforming.TableValueTransformer;
-
+import data.search_results.MockSearchResultIndex;
+import data.search_results.MockSimpleSearchResultIndex;
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
-
-import data.search_results.SearchResultIndex;
-
-import stem_counter_searching.StemCounterSearcher;
-import stem_counter_searching.SimpleStemCounterSearcher;
-
+import stem_counter_searching.MockNewSimpleStemCounterSearcher;
 import stem_reading.text_stemming.TextLineStemmer;
+import table_value_transforming.TableValueTransformer;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -68,11 +59,25 @@ public class Driver {
 		TableValueTransformer<TreeSet<Integer>, Integer> transformer = TreeSet::size;
 		transformer.transform(((InvertedIndexTable) config.invertedIndex).snapshot(), (StemCounterTable)counter);
 
-		SearchResultIndex index = new SimpleSearchResultIndex(SimpleSearchResult.FACTORY);
+		
+		MockSearchResultIndex index = new MockSimpleSearchResultIndex();
 		var queries = new ArgumentMap(args).getPath("-query", null);
-		var b = new SimpleStemCounterSearcher(counter, queries, new TextLineStemmer(), index);
-		b.trySearchingStemCounter();
+		var searcher = new MockNewSimpleStemCounterSearcher(
+				counter,
+				queries,
+				new TextLineStemmer(),
+				index);
+		searcher.trySearchingStemCounter();
 		System.out.println(index);
+		
+		/** TODO:
+		 * 1. change mock search result, searcher, index to real versions
+		 * 2. cardin query result doesn't show up but should - maybe b/c it's empty?
+		 * 3. change "matches" in JSON representation to "count"
+		 * 4. change where in variables to fileName
+		 * 5. Get double formatting
+		 * 6. Then can work on view, controller, etc.
+		 */
 		
 		
 		// calculate time elapsed and output

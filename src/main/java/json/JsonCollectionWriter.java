@@ -5,8 +5,6 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 
-import data.search_results.SimpleSearchResult;
-
 public interface JsonCollectionWriter<E> extends JsonWriter {
 
     /**

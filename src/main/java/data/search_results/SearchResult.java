@@ -12,9 +12,8 @@ public interface SearchResult extends Cloneable, Comparable<SearchResult>, JsonW
 		
 	double score();
 	
-	static interface Factory {
-		SearchResult create(String fileName, double stemCount, double matches);
-	}
+	static final double NOT_FOUND_SCORE = -1.0;
+	
 	SearchResult clone();
 	
 	static final Comparator<SearchResult> COMPARATOR = Comparator
@@ -26,5 +25,9 @@ public interface SearchResult extends Cloneable, Comparable<SearchResult>, JsonW
 	@Override
 	default int compareTo(SearchResult o) {
 		return COMPARATOR.compare(this, o);
+	}
+	
+	static interface Factory {
+		SearchResult create();
 	}
 }

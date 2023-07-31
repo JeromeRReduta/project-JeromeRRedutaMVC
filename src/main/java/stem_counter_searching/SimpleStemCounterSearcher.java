@@ -4,12 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 
@@ -75,7 +71,7 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 		stemCounterSnapshot.columnMap().entrySet().stream()
 			.map(entry -> new ExactQueryInfo(entry, queryStems))
 			.filter(exactQueryInfo -> exactQueryInfo.matches > 0)
-			.forEach(ExactQueryInfo::addInfoToIndex);
+			.forEach(System.out::println);
 	}
 	
 	class ExactQueryInfo {
@@ -106,10 +102,6 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 			this.matches += numOfStemInFile != null
 					? numOfStemInFile
 					: 0;
-		}
-		
-		void addInfoToIndex() {
-			index.add(queryAsLine, fileName, score, matches);
 		}
 		
 		@Override
