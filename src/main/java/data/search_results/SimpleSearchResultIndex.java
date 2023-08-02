@@ -11,8 +11,9 @@ import json.JsonCollectionWriter;
 import json.JsonMapWriter;
 import json.JsonWriter;
 
-public class SimpleSearchResultIndex implements SearchResultIndex {
+public class SimpleSearchResultIndex {
 	
+	/**
 	private Map<String, TreeSet<SearchResult>> searchResults;
 	
 	public SimpleSearchResultIndex() {
@@ -55,4 +56,5 @@ public class SimpleSearchResultIndex implements SearchResultIndex {
 	public String toString() {
 		return toJsonString();
 	}
+	*/
 }

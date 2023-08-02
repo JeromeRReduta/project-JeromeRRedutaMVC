@@ -7,8 +7,7 @@ import apps.Project1AppWithWorkflows;
 import argument_parsing.ArgumentMap;
 import configurations.Project1Config;
 import data.InvertedIndexTable;
-import data.search_results.MockSearchResultIndex;
-import data.search_results.MockSimpleSearchResultIndex;
+import data.search_results.SearchResultIndex;
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
 import stem_counter_searching.MockNewSimpleStemCounterSearcher;
@@ -59,16 +58,7 @@ public class Driver {
 		TableValueTransformer<TreeSet<Integer>, Integer> transformer = TreeSet::size;
 		transformer.transform(((InvertedIndexTable) config.invertedIndex).snapshot(), (StemCounterTable)counter);
 
-		
-		MockSearchResultIndex index = new MockSimpleSearchResultIndex();
-		var queries = new ArgumentMap(args).getPath("-query", null);
-		var searcher = new MockNewSimpleStemCounterSearcher(
-				counter,
-				queries,
-				new TextLineStemmer(),
-				index);
-		searcher.trySearchingStemCounter();
-		System.out.println(index);
+		System.out.println(SearchResultIndex.SearchResultFactory.create("a", 254.25f, 4));
 		
 		/** TODO:
 		 * 1. change mock search result, searcher, index to real versions

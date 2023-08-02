@@ -9,14 +9,14 @@ import java.util.TreeMap;
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.TreeBasedTable;
 
-import data.AbstractStemFileNameValueTable;
-import data.StemFileNameValueTable;
+import data.AbstractStringKeyTable;
+import data.SearchEngineStringKeyTable;
 import json.JsonMapWriter;
 import json.JsonTableWriter;
 import json.JsonWriter;
 
 public class StemCounterTable
-	extends AbstractStemFileNameValueTable<Integer>
+	extends AbstractStringKeyTable<Integer>
 	implements StemCounter {
 	
 	private Map<String, Integer> stemCountsByFile;
@@ -26,7 +26,7 @@ public class StemCounterTable
 	}
 
 	@Override
-	public StemFileNameValueTable<Integer> snapshot() {
+	public SearchEngineStringKeyTable<Integer> snapshot() {
 		StemCounterTable snapshot = new StemCounterTable();
 		cellSet().forEach( cell -> {
 			snapshot.add(cell.getRowKey(), cell.getColumnKey(), cell.getValue());

@@ -4,8 +4,8 @@ import com.google.common.collect.RowSortedTable;
 
 import json.JsonWriteable;
 
-public interface StemFileNameValueTable<V>
+public interface SearchEngineStringKeyTable<V>
 	extends RowSortedTable<String, String, V>, JsonWriteable {
 	
-	StemFileNameValueTable<V> snapshot();
+	SearchEngineStringKeyTable<V> snapshot();
 }

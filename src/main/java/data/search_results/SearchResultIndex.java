@@ -1,13 +1,81 @@
 package data.search_results;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 
 import json.JsonWriteable;
+import json.JsonWriter;
 
-public interface SearchResultIndex extends JsonWriteable {
+public interface SearchResultIndex {
 	
-	void add(String query, SearchResult result);
+	void add(String queryAsLine, SearchResult result);
+
+	/** TODO: Figure out how to add queryAsLine to SearchResultIndex, even if there are no SearchResults - maybe putIfAbs? */
+	void addAll(String queryAsLine, Collection<SearchResult> results);
 	
-	Map<String, ? extends Collection<SearchResult>> snapshot();
+	public final class SearchResult implements JsonWriteable, Cloneable, Comparable<SearchResult> {
+		
+		public final String fileName;
+		
+		public final double matches;
+		
+		public final double score;
+		
+		public static final Comparator<SearchResult> COMPARATOR = Comparator
+				.comparing((SearchResult result) -> result.score)
+				.thenComparing(result -> result.matches)
+				.thenComparing(result -> result.fileName.toLowerCase());
+				// for some reason if I don't declare the class name here it won't compile
+		
+		private SearchResult(String fileName, double matches, double score) {
+			this.fileName = fileName;
+			this.matches = matches;
+			this.score = score;
+		}
+		
+		public SearchResult clone() {
+			return new SearchResult(fileName, matches, score);
+		}
+
+		@Override
+		public void writeToJson(int baseIndent, Writer writer) throws IOException {
+			JsonWriter.writeIndented(baseIndent, writer, "{" + JsonWriter.crlf);
+			JsonWriter.writeIndented(baseIndent + 1, writer, "\"where\": \"" + fileName + "\"," + JsonWriter.crlf);
+			JsonWriter.writeIndented(baseIndent + 1, writer, "\"count\": " + matches + "," +  JsonWriter.crlf);
+			JsonWriter.writeIndented(baseIndent + 1, writer, "\"score\": " + score + JsonWriter.crlf);
+			JsonWriter.writeIndented(baseIndent, writer, "}");
+		}
+		
+		@Override
+		public int compareTo(SearchResult o) {
+			return COMPARATOR.compare(this, o);
+		}
+		
+		@Override
+		public String toString() {
+			return toJsonString();
+		}
+	}
+	
+	public final class SearchResultFactory {
+		
+		public static SearchResult create(String fileName, Number matches, Number stemCount) {
+			if (matches == null || stemCount == null) {
+				return null;
+			}
+			double matchesAsDouble = matches.doubleValue();
+			double stemCountAsDouble = stemCount.doubleValue();
+			if (matchesAsDouble == 0 || stemCountAsDouble == 0) {
+				return null;
+			}
+			return new SearchResult(
+					fileName,
+					matchesAsDouble,
+					matchesAsDouble/stemCountAsDouble);
+			
+		}
+	}
 }

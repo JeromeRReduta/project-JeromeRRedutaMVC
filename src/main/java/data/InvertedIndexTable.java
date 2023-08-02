@@ -10,14 +10,14 @@ import json.JsonCollectionWriter;
 import json.JsonTableWriter;
 
 public class InvertedIndexTable 
-	extends AbstractStemFileNameValueTable<TreeSet<Integer>>
+	extends AbstractStringKeyTable<TreeSet<Integer>>
 	implements InvertedIndex {
 
 	public InvertedIndexTable() {
 	}
 
 	@Override
-	public StemFileNameValueTable<TreeSet<Integer>> snapshot() {
+	public SearchEngineStringKeyTable<TreeSet<Integer>> snapshot() {
 		InvertedIndexTable clone = new InvertedIndexTable();
 		cellSet().forEach(cell -> {
 			clone.put(

@@ -5,17 +5,17 @@ import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 
-import data.AbstractStemFileNameValueTable;
+import data.AbstractStringKeyTable;
 import views.DataToTextFileView;
 
 public class TextFileInvertedIndexControllerWithSnapshot implements InvertedIndexControllerWithSnapshot {
 	
-	private AbstractStemFileNameValueTable<TreeSet<Integer>> invertedIndex;
+	private AbstractStringKeyTable<TreeSet<Integer>> invertedIndex;
 	
 	private DataToTextFileView view;
 	
 	public TextFileInvertedIndexControllerWithSnapshot(
-		AbstractStemFileNameValueTable<TreeSet<Integer>> invertedIndex,
+		AbstractStringKeyTable<TreeSet<Integer>> invertedIndex,
 		DataToTextFileView view) {
 		this.invertedIndex = invertedIndex;
 		this.view = view;

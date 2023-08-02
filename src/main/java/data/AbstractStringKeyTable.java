@@ -10,16 +10,16 @@ import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 
-public abstract class AbstractStemFileNameValueTable<V>
-	implements StemFileNameValueTable<V> {
+public abstract class AbstractStringKeyTable<V>
+	implements SearchEngineStringKeyTable<V> {
 	
 	protected RowSortedTable<String, String, V> backingTable;
 	
-	public AbstractStemFileNameValueTable(){
+	public AbstractStringKeyTable(){
 		this(TreeBasedTable.create());
 	}
 	
-	public AbstractStemFileNameValueTable(RowSortedTable<String, String, V> backingTable) {
+	public AbstractStringKeyTable(RowSortedTable<String, String, V> backingTable) {
 		this.backingTable = backingTable;
 	}
 

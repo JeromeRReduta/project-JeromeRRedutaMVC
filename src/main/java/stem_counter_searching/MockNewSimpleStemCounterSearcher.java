@@ -6,14 +6,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
+import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
-
-import data.search_results.MockSearchResultIndex;
 import data.stem_counting.StemCounter;
 import stem_reading.text_stemming.TextStemmer;
 
-public class MockNewSimpleStemCounterSearcher implements StemCounterSearcher {
+public class MockNewSimpleStemCounterSearcher 
+	//implements StemCounterSearcher
+	{
+	/**
 	
 	private RowSortedTable<String, String, Integer> stemCounterSnapshot;
 	
@@ -63,25 +65,39 @@ public class MockNewSimpleStemCounterSearcher implements StemCounterSearcher {
 	private void searchStemCounter(Collection<String> queryStems) {
 		String queryAsLine = queryStems.toString()
 				.replaceAll(BRACKET_AND_COMMA_REGEX, "");
+		TreeSet<MockSearchResultIndex.MockSearchResult> results
+			= new TreeSet<>();
+		stemCounterSnapshot.columnMap().entrySet().stream()
+			.map(entry -> mapEntryToSearchResult(queryStems, entry))
+			.filter(result -> result.score() > 0 && result.matches() > MockSearchResult.NOT_FOUND_SCORE)
+			.forEach(result -> index.add(queryAsLine, result));
+			
 		stemCounterSnapshot.columnMap().entrySet()
 			.forEach(entry -> addResultToIndex(queryStems, queryAsLine, entry));
 	}
 	
-	private void addResultToIndex(
+	private MockSearchResult mapEntryToSearchResult(
 			Collection<String> queryStems,
-			String queryAsLine,
 			Map.Entry<String, Map<String, Integer>> entry) {
-		String where = entry.getKey();
+		String fileName = entry.getKey();
 		Map<String, Integer> stemCountPerStem = entry.getValue();
 		double matches = queryStems.stream()
 				.map(stem -> stemCountPerStem.get(stem))
 				.filter(value -> value != null)
 				.reduce(0, Integer::sum);
-		double stemCount = stemCountByFileNameSnapshot.get(where);
-		if (matches == 0 || stemCount == 0) { // We don't want any div by 0 errors or scores of 0 to show up in the index
-			return;
-		}
+		double stemCount = stemCountByFileNameSnapshot.getOrDefault(fileName, 0);
+		double score = stemCount > 0.0 ? matches/stemCount : MockSearchResult.NOT_FOUND_SCORE;
+		return resultFactory.create(fileName, matches, score);
+	}
+	private void addResultToIndex(
+			Collection<String> queryStems,
+			String queryAsLine,
+			Map.Entry<String, Map<String, Integer>> entry) {
+		String where = entry.getKey();
+
 		index.add(queryAsLine, where, matches, matches/stemCount);
 	}
+	
+	*/
 }
 	
