@@ -147,8 +147,8 @@ public class Project1Config implements Config {
 					index,
 					finder,
 					stemmer);
-			System.out.println(sourceFile);
 		}
+		
 		@Override
 		public Project1Config createConfig() {
 			return new Project1Config(

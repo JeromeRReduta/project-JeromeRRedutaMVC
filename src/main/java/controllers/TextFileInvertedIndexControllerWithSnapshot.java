@@ -6,17 +6,19 @@ import java.util.TreeSet;
 import com.google.common.collect.RowSortedTable;
 
 import data.AbstractStringKeyTable;
+import data.InvertedIndex;
 import views.DataToTextFileView;
+import views.GenericTextFileView;
 
 public class TextFileInvertedIndexControllerWithSnapshot implements InvertedIndexControllerWithSnapshot {
 	
 	private AbstractStringKeyTable<TreeSet<Integer>> invertedIndex;
 	
-	private DataToTextFileView view;
+	private GenericTextFileView<InvertedIndex> view;
 	
 	public TextFileInvertedIndexControllerWithSnapshot(
 		AbstractStringKeyTable<TreeSet<Integer>> invertedIndex,
-		DataToTextFileView view) {
+		 GenericTextFileView<InvertedIndex> view) {
 		this.invertedIndex = invertedIndex;
 		this.view = view;
 	}
@@ -38,7 +40,6 @@ public class TextFileInvertedIndexControllerWithSnapshot implements InvertedInde
 
 	@Override
 	public RowSortedTable<String, String, TreeSet<Integer>> snapshot() {
-		// TODO Auto-generated method stub
 		return invertedIndex.snapshot();
 	}
 }

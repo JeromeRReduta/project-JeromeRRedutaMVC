@@ -4,13 +4,15 @@ import java.util.Map;
 
 import com.google.common.collect.RowSortedTable;
 
+import json.JsonWriteable;
+
 /**
  * A nested data structure. Similar to the InvertedIndex but instead
  * it tracks how many times a given stem shows up in a given file
  * @author JRRed
  *
  */
-public interface StemCounter {
+public interface StemCounter extends JsonWriteable {
 	
 	/**
 	 * Adds a stem / fileName / count triplet to the stem counter

@@ -11,9 +11,6 @@ import java.util.Map;
  */
 public interface InvertedIndexController extends JsonWriteableController {
 	
-	@Override
-	void tryDisplaying();
-	
 	/**
 	 * Given a stem as key, returns the associated inner map value. To ensure data safety, this method
 	 * should return a CLONE.

@@ -1,39 +1,47 @@
 package data.search_results;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
 import json.JsonWriteable;
 import json.JsonWriter;
 
-public interface SearchResultIndex {
+public interface SearchResultIndex extends JsonWriteable {
 	
 	void add(String queryAsLine, SearchResult result);
+	
+	/** Note - not doing for each result, add(queryAsLine, result) b/c this is a nested data struct */
+	void addAll(String queryAsLine, Collection<SearchResult> results);
+	
+	Map<String, ? extends Set<SearchResult>> snapshot();
 
 	/** TODO: Figure out how to add queryAsLine to SearchResultIndex, even if there are no SearchResults - maybe putIfAbs? */
-	void addAll(String queryAsLine, Collection<SearchResult> results);
 	
 	public final class SearchResult implements JsonWriteable, Cloneable, Comparable<SearchResult> {
 		
 		public final String fileName;
 		
-		public final double matches;
+		public final int matches;
 		
 		public final double score;
 		
 		public static final Comparator<SearchResult> COMPARATOR = Comparator
 				.comparing((SearchResult result) -> result.score)
-				.thenComparing(result -> result.matches)
+				.thenComparing(result -> result.matches).reversed() // we reverse this comparator b/c we want higher matches on top
 				.thenComparing(result -> result.fileName.toLowerCase());
+		
+		private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00000000");
 				// for some reason if I don't declare the class name here it won't compile
 		
-		private SearchResult(String fileName, double matches, double score) {
+		private SearchResult(String fileName, Number matches, Number score) {
 			this.fileName = fileName;
-			this.matches = matches;
-			this.score = score;
+			this.matches = matches.intValue();
+			this.score = score.doubleValue();
 		}
 		
 		public SearchResult clone() {
@@ -45,7 +53,7 @@ public interface SearchResultIndex {
 			JsonWriter.writeIndented(baseIndent, writer, "{" + JsonWriter.crlf);
 			JsonWriter.writeIndented(baseIndent + 1, writer, "\"where\": \"" + fileName + "\"," + JsonWriter.crlf);
 			JsonWriter.writeIndented(baseIndent + 1, writer, "\"count\": " + matches + "," +  JsonWriter.crlf);
-			JsonWriter.writeIndented(baseIndent + 1, writer, "\"score\": " + score + JsonWriter.crlf);
+			JsonWriter.writeIndented(baseIndent + 1, writer, "\"score\": " + DECIMAL_FORMAT.format(score) + JsonWriter.crlf);
 			JsonWriter.writeIndented(baseIndent, writer, "}");
 		}
 		
@@ -62,7 +70,10 @@ public interface SearchResultIndex {
 	
 	public final class SearchResultFactory {
 		
-		public static SearchResult create(String fileName, Number matches, Number stemCount) {
+		public static SearchResult create(
+				String fileName,
+				Number matches,
+				Number stemCount) {
 			if (matches == null || stemCount == null) {
 				return null;
 			}

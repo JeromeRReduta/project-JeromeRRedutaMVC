@@ -1,4 +1,9 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
+
+import stem_counter_searching.StemCounterSearcher;
+import stem_counter_searching.SimpleStemCounterSearcher;
 import java.time.Instant;
 import java.util.TreeSet;
 
@@ -6,13 +11,22 @@ import apps.App;
 import apps.Project1AppWithWorkflows;
 import argument_parsing.ArgumentMap;
 import configurations.Project1Config;
+import data.AbstractStringKeyTable;
 import data.InvertedIndexTable;
 import data.search_results.SearchResultIndex;
+import data.search_results.SearchResultIndexMap;
+import data.search_results.SearchResultIndex.SearchResult;
+import data.search_results.SearchResultIndex.SearchResultFactory;
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
-import stem_counter_searching.MockNewSimpleStemCounterSearcher;
 import stem_reading.text_stemming.TextLineStemmer;
-import table_value_transforming.TableValueTransformer;
+import table_value_transforming.StringKeyTableValueTransformer;
+import views.GenericTextFileView;
+import controllers.StemCounterController;
+import controllers.TextFileStemCounterController;
+import data.search_results.SimpleSearchResultIndex;
+import controllers.SearchResultIndexController;
+import controllers.TextFileSearchResultIndexController;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -46,19 +60,37 @@ public class Driver {
 		 * 
 		 * So in reality, need to change our searcher to read the query file line by line
 		 */
-		
 		Instant start = Instant.now(); // store initial start time
 		Project1Config config = new Project1Config.Factory(args).createValidatedConfig();
 		App app = new Project1AppWithWorkflows(config);
-		String[] thing = new String[] {"a", "b"};
 		app.run();
-		
-		
+		ArgumentMap mockMap = new ArgumentMap(args);
 		StemCounter counter = new StemCounterTable();
-		TableValueTransformer<TreeSet<Integer>, Integer> transformer = TreeSet::size;
-		transformer.transform(((InvertedIndexTable) config.invertedIndex).snapshot(), (StemCounterTable)counter);
-
-		System.out.println(SearchResultIndex.SearchResultFactory.create("a", 254.25f, 4));
+		GenericTextFileView<StemCounter> stemCounterView = new GenericTextFileView<>(counter, mockMap.getPath("-counts", null));
+		StemCounterController stemCounterController = new TextFileStemCounterController(counter, stemCounterView);
+		
+		StringKeyTableValueTransformer<TreeSet<Integer>, Integer> transformer = TreeSet::size;
+		transformer.transform((AbstractStringKeyTable<TreeSet<Integer>>)config.invertedIndex, (AbstractStringKeyTable<Integer>)counter);
+		System.out.println(mockMap.containsFlag("-counts"));
+		if (mockMap.containsFlag("-counts")) {
+			stemCounterController.tryDisplaying();
+		}
+		
+		SearchResultIndex sRIndex = new SearchResultIndexMap();
+		GenericTextFileView<SearchResultIndex> sRIView = new GenericTextFileView<>(sRIndex, mockMap.getPath("-results", null));
+		SearchResultIndexController sRIController = new TextFileSearchResultIndexController(sRIndex, sRIView);
+		
+		if (mockMap.containsFlag("-query")) {
+			StemCounterSearcher searcher = new SimpleStemCounterSearcher(
+					counter,
+					mockMap.getPath("-query", null),
+					new TextLineStemmer(),
+					sRIndex);
+			searcher.trySearchingStemCounter();
+		}
+		if (mockMap.containsFlag("-results")) {
+			sRIController.tryDisplaying();
+		}
 		
 		/** TODO:
 		 * 1. change mock search result, searcher, index to real versions
