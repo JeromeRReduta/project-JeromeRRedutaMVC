@@ -1,6 +1,7 @@
 package stem_counter_searching;
 
 import java.io.IOException;
+import java.util.function.BiPredicate;
 
 /**
  * Searches a stem counter, adding its search results to a SearchResultIndex. How the search happens, the stem
@@ -29,4 +30,9 @@ public interface StemCounterSearcher {
 	 * @throws IOException in case of IOError
 	 */
 	void searchStemCounter() throws IOException;
+	
+	public interface StemMatchingStrategy {
+		
+		boolean stemsMatch(String dataStem, String queryStem);
+	}
 }

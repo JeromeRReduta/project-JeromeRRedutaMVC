@@ -6,6 +6,7 @@ import stem_counter_searching.StemCounterSearcher;
 import stem_counter_searching.SimpleStemCounterSearcher;
 import java.time.Instant;
 import java.util.TreeSet;
+import java.util.function.BiPredicate;
 
 import apps.App;
 import apps.Project1AppWithWorkflows;
@@ -80,12 +81,16 @@ public class Driver {
 		GenericTextFileView<SearchResultIndex> sRIView = new GenericTextFileView<>(sRIndex, mockMap.getPath("-results", null));
 		SearchResultIndexController sRIController = new TextFileSearchResultIndexController(sRIndex, sRIView);
 		
+		StemCounterSearcher.StemMatchingStrategy stemMatchingStrategy = mockMap.containsFlag("-exact")
+				? (stemFromData, queryStem) -> stemFromData.equals(queryStem)
+				: (stemFromData, queryStem) -> stemFromData.startsWith(queryStem);
 		if (mockMap.containsFlag("-query")) {
 			StemCounterSearcher searcher = new SimpleStemCounterSearcher(
 					counter,
 					mockMap.getPath("-query", null),
 					new TextLineStemmer(),
-					sRIndex);
+					sRIndex,
+					stemMatchingStrategy);
 			searcher.trySearchingStemCounter();
 		}
 		if (mockMap.containsFlag("-results")) {
