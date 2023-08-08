@@ -1,4 +1,4 @@
-package configurations;
+package configurations.deprecated_configs;
 
 import json.JsonWriteable;
 
@@ -6,6 +6,7 @@ import json.JsonWriteable;
  * Allows project configs to be used all under
  * one supertype. No other use.
  * 
+ * @deprecated modular only now
  * @author JRRed
  *
  */

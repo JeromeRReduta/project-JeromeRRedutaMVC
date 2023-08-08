@@ -7,17 +7,18 @@ import com.google.common.collect.RowSortedTable;
 
 import data.AbstractStringKeyTable;
 import data.InvertedIndex;
+import data.InvertedIndexWithSnapshot;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
 
 public class TextFileInvertedIndexControllerWithSnapshot implements InvertedIndexControllerWithSnapshot {
 	
-	private AbstractStringKeyTable<TreeSet<Integer>> invertedIndex;
+	private InvertedIndexWithSnapshot invertedIndex;
 	
 	private GenericTextFileView<InvertedIndex> view;
 	
 	public TextFileInvertedIndexControllerWithSnapshot(
-		AbstractStringKeyTable<TreeSet<Integer>> invertedIndex,
+			InvertedIndexWithSnapshot invertedIndex,
 		 GenericTextFileView<InvertedIndex> view) {
 		this.invertedIndex = invertedIndex;
 		this.view = view;

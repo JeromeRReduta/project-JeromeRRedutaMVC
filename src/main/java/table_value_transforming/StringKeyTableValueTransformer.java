@@ -5,6 +5,8 @@ import data.AbstractStringKeyTable;
 
 public interface StringKeyTableValueTransformer<V1, V2> {
 	
+	void transform();
+	
 	/**
 	 * Adds cells with transformed values from one table to another
 	 * @param <R> row type

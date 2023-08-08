@@ -1,7 +1,8 @@
-package configurations;
+package configurations.deprecated_configs;
 
 /**
  * Validates a given project Config based on some rules. These rules are up to the implementation/author.
+ * @deprecated modular only now
  * @author JRRed
  *
  * @param <C> Type of Config

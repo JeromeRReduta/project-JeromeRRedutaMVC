@@ -1,4 +1,4 @@
-package configurations;
+package configurations.deprecated_configs;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Project 1 implementation of ConfigValidator
+ * @deprecated modular only now
  * @author JRRed
  *
  */

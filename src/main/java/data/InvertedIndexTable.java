@@ -11,7 +11,7 @@ import json.JsonTableWriter;
 
 public class InvertedIndexTable 
 	extends AbstractStringKeyTable<TreeSet<Integer>>
-	implements InvertedIndex {
+	implements InvertedIndexWithSnapshot {
 
 	public InvertedIndexTable() {
 	}

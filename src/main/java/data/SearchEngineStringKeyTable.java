@@ -6,6 +6,4 @@ import json.JsonWriteable;
 
 public interface SearchEngineStringKeyTable<V>
 	extends RowSortedTable<String, String, V>, JsonWriteable {
-	
-	SearchEngineStringKeyTable<V> snapshot();
 }

@@ -2,11 +2,10 @@ package apps;
 
 import java.nio.file.Path;
 
-import configurations.Project1Config;
+import configurations.deprecated_configs.Project1Config;
 import controllers.InvertedIndexController;
 import stem_reading.StemReader;
-import workflows.DataReadingWorkflow;
-import workflows.WriteJsonToFileWorkflow;
+import workflows.Workflows;
 
 /**
  * Mock class created to make sure workflows work the way I think they do, and that they can be used
@@ -15,7 +14,7 @@ import workflows.WriteJsonToFileWorkflow;
  * @author JRRed
  *
  */
-public class Project1AppWithWorkflows implements App, DataReadingWorkflow, WriteJsonToFileWorkflow {
+public class Project1AppWithWorkflows implements App {
 	private StemReader<Path> stemReader;
 	
 	private InvertedIndexController controller;
@@ -32,7 +31,9 @@ public class Project1AppWithWorkflows implements App, DataReadingWorkflow, Write
 	}
 	@Override
 	public void run() {
-		DataReadingWorkflow.runIfRequested(readDataIsRequested, stemReader);
-		WriteJsonToFileWorkflow.runIfRequested(outputToFileIsRequested, controller);
+		Workflows.ReadIntoInvertedIndex
+			.runIfRequested(readDataIsRequested, stemReader);
+		Workflows.DisplayIndex
+			.runIfRequested(outputToFileIsRequested, controller);
 	}
 }

@@ -1,8 +1,9 @@
-package configurations;
+package configurations.deprecated_configs;
 
 /**
  * Thrown when a given Config has values that should not be allowed.
  * What is/isn't allowed is defined by the Config implmentation/author.
+ * @deprecated modular only now
  * @author JRRed
  *
  */

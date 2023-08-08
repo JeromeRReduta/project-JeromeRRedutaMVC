@@ -25,9 +25,12 @@ import stem_reading.text_stemming.TextStemmer;
 
 public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	
+	private final StemCounter counter;
+	/*
 	private RowSortedTable<String, String, Integer> stemCountTableSnapshot;
 	
 	private Map<String, Integer> totalStemsByFileNameSnapshot;
+	*/
 	
 	private Path queries;
 	
@@ -40,13 +43,12 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	private static final String BRACKET_AND_COMMA_REGEX = "[\\[\\],]";
 	
 	public SimpleStemCounterSearcher(
-			StemCounter stemCounter,
+			StemCounter counter,
 			Path queries,
 			TextStemmer<String> stemmer,
 			SearchResultIndex index,
 			StemMatchingStrategy stemMatchingStrategy) {
-		this.stemCountTableSnapshot = stemCounter.snapshotOfStemCountTable();
-		this.totalStemsByFileNameSnapshot = stemCounter.snapshotOfStemCountsByFile();
+		this.counter = counter;
 		this.queries = queries;
 		this.stemmer = stemmer;
 		this.index = index;
@@ -55,11 +57,20 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 
 	@Override
 	public void searchStemCounter() throws IOException {
+		/*
+		private RowSortedTable<String, String, Integer> stemCountTableSnapshot;
+		
+		private Map<String, Integer> totalStemsByFileNameSnapshot;
+		*/
+		
+		RowSortedTable<String, String, Integer> tableSnapshot = counter.snapshotOfStemCountTable();
+		Map<String, Integer> totalStemsSnapshot = counter.snapshotOfStemCountsByFile();
+		
 		try (BufferedReader reader = Files.newBufferedReader(queries)) {
 			reader.lines()
 				.map(this::safeUniqueStems)
 				.filter(stems -> !stems.isEmpty())
-				.forEach(this::search);
+				.forEach(queryStems -> search(queryStems, tableSnapshot, totalStemsSnapshot));
 		}
 	}
 	
@@ -73,21 +84,26 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 		}
 	}
 	
-	private void search(Collection<String> queryStems) {
+	// TODO: add extra args
+	private void search(
+			Collection<String> queryStems,
+			RowSortedTable<String, String, Integer> tableSnapshot,
+			Map<String, Integer> totalStemsSnapshot) {
 		String queryAsLine = queryStems.toString().replaceAll(BRACKET_AND_COMMA_REGEX, "");
-		List<SearchResult> results = stemCountTableSnapshot.columnMap().entrySet().stream()
-			.map(entry -> mapSnapshotEntryToResult(entry, queryStems))
+		List<SearchResult> results = tableSnapshot.columnMap().entrySet().stream()
+			.map(entry -> mapSnapshotEntryToResult(entry, queryStems, totalStemsSnapshot))
 			.filter(result -> result != null)
 			.collect(Collectors.toList());
 		index.addAll(queryAsLine, results);
 	}
 	
-	private SearchResult mapSnapshotEntryToResult(Map.Entry<String, Map<String, Integer>> snapshotEntry, Collection<String> queryStems) {
+	private SearchResult mapSnapshotEntryToResult(Map.Entry<String, Map<String, Integer>> snapshotEntry, Collection<String> queryStems,
+			Map<String, Integer> totalStemsSnapshot) {
 		String fileName = snapshotEntry.getKey();
 		Number matches = snapshotEntry.getValue().entrySet().stream()
 				.mapToInt(entry -> numberOfMatches(entry, queryStems))
 				.sum();
-		Number stemCount = totalStemsByFileNameSnapshot.getOrDefault(fileName, 0);
+		Number stemCount = totalStemsSnapshot.getOrDefault(fileName, 0);
 		return SearchResultFactory.create(fileName, matches, stemCount);
 	}
 	

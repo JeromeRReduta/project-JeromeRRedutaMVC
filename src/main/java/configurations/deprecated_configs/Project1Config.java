@@ -1,4 +1,4 @@
-package configurations;
+package configurations.deprecated_configs;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -24,6 +24,7 @@ import views.InvertedIndexView;
 
 /**
  * Project 1 Implementation of Config
+ * @deprecated modular only now
  * @author JRRed
  *
  */

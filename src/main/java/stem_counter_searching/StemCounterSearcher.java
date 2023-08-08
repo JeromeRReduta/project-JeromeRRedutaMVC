@@ -33,6 +33,18 @@ public interface StemCounterSearcher {
 	
 	public interface StemMatchingStrategy {
 		
+		static final StemMatchingStrategy EXACT_MATCH =
+				(dataStem, queryStem) -> dataStem.equals(queryStem);
+				
+		static final StemMatchingStrategy PARTIAL_MATCH =
+				(dataStem, queryStem) -> dataStem.startsWith(queryStem);
+				
+		static StemMatchingStrategy getDefault(boolean shouldDoExactSearch) {
+			return shouldDoExactSearch
+					? EXACT_MATCH
+					: PARTIAL_MATCH;
+		}
+		
 		boolean stemsMatch(String dataStem, String queryStem);
 	}
 }

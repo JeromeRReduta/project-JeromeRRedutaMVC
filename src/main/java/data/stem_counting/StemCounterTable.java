@@ -26,15 +26,6 @@ public class StemCounterTable
 	}
 
 	@Override
-	public SearchEngineStringKeyTable<Integer> snapshot() {
-		StemCounterTable snapshot = new StemCounterTable();
-		cellSet().forEach( cell -> {
-			snapshot.add(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
-		});
-		return snapshot;
-	}
-	
-	@Override
 	public Integer put(String stem, String fileName, Integer count) {
 		Integer originalValue = super.get(stem, fileName);
 		super.put(stem,  fileName, count);
