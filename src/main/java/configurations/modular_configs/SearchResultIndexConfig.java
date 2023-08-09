@@ -119,7 +119,7 @@ public class SearchResultIndexConfig implements ModularConfig {
 					shouldDoExactSearch,
 					stemmer,
 					queryFile,
-					queryFile);
+					outputFile);
 			
 		}
 	}

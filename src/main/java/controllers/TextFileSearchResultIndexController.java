@@ -31,8 +31,8 @@ public class TextFileSearchResultIndexController
 			System.err.println("Error displaying search result index; cancelling write...");
 		}
 		catch (Exception e) {
-			System.err.println("This should NEVER run");
-			assert false;
+			System.err.println("This should NEVER run - textfilesearchresultindexcontroller");
+			e.printStackTrace();
 		}
 		
 	}

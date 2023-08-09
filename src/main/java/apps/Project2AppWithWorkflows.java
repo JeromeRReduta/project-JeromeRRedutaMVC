@@ -71,7 +71,7 @@ public class Project2AppWithWorkflows implements
 			.runIfRequested(writeStemCounterIsRequested, stemCounterController);
 		Workflows.ReadIntoSearchResultIndex
 			.runIfRequested(searchStemCounterIsRequested, searcher);
-		Workflows.DisplaySearchResultIndex
+		Workflows.DisplaySearchResultIndex // found cause - I put queryFie into outputFile input on accident
 			.runIfRequested(writeSearchResultIndexIsRequested, searchResultIndexController);
 	}
 }
