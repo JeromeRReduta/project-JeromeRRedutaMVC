@@ -1,10 +1,5 @@
 package configurations.modular_configs;
 
-import static configurations.StaticGlobalValues.DEFAULT_INVERTED_INDEX_OUTPUT;
-import static configurations.StaticGlobalValues.INVERTED_INDEX_OUTPUT;
-import static configurations.StaticGlobalValues.NO_TEXT_FLAG_INDEX_OUTPUT;
-import static configurations.StaticGlobalValues.TEXT_SOURCE;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
@@ -27,6 +22,16 @@ import views.GenericTextFileView;
 
 public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 	
+	/** Flags and outputs as decided by project requirements */
+	private final static String TEXT_FLAG = "-text";
+	
+	private final static String OUTPUT_FLAG = "-index";
+	
+	private final static Path DEFAULT_OUTPUT = Path.of("index.json");
+	
+	private final static Path NO_FLAG_OUTPUT = null;
+	
+	/** Vars used in the config */
 	public final Path inputFile;
 	
 	public final TextSourceFinder<Path> textFileFinder;
@@ -88,15 +93,15 @@ public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 
 		@Override
 		public InvertedIndexWithSnapshotConfig createConfig() {
-			Path inputFile = reader.getPath(TEXT_SOURCE, null);
+			Path inputFile = reader.getPath(TEXT_FLAG, null);
 			InvertedIndexWithSnapshot model = new InvertedIndexTable();
 			TextSourceFinder<Path> textFileFinder = new TextFileFinder(inputFile);
 			TextStemmer<Path> textFileStemmer = new TextFileStemmer();
 			StemReader<Path> stemReader = new TextFileStemReader(
 					model, textFileFinder, textFileStemmer);
-			Path outputFile = reader.containsFlag(INVERTED_INDEX_OUTPUT)
-					? reader.getPath(INVERTED_INDEX_OUTPUT, DEFAULT_INVERTED_INDEX_OUTPUT)
-					: NO_TEXT_FLAG_INDEX_OUTPUT;
+			Path outputFile = reader.containsFlag(OUTPUT_FLAG)
+					? reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT)
+					: NO_FLAG_OUTPUT;
 			DataToTextFileView view
 					= new GenericTextFileView<>(model, outputFile);
 			InvertedIndexController controller

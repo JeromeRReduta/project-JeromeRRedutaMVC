@@ -24,6 +24,20 @@ import views.GenericTextFileView;
 
 public class SearchResultIndexConfig implements ModularConfig {
 	
+	/** Flags and outputs as decided by project requirements */
+	private final static String EXACT_FLAG = "-exact";
+	
+	private final static String OUTPUT_FLAG = "-results";
+	
+	private final static Path DEFAULT_OUTPUT = Path.of("results.json");
+	
+	private final static String QUERY_FLAG = "-query";
+	
+	private final static Path DEFAULT_QUERY = null;
+	
+	private final static Path NO_FLAG_OUTPUT = null;
+	
+	/** Config vars */
 	public final StemCounter stemCounter;
 	
 	public final StemCounterSearcher searcher;
@@ -86,23 +100,21 @@ public class SearchResultIndexConfig implements ModularConfig {
 			this.reader = reader;
 			this.stemCounter = stemCounter;
 		}
-		
-		/** TODO: Complete SearchResultIndexConfig */
 
 		@Override
 		public SearchResultIndexConfig createConfig() {
-			boolean shouldDoExactSearch = reader.containsFlag("-exact"); // TODO - make this EXACT FLAG A VALUE IN GLOBAL VALUES
+			boolean shouldDoExactSearch = reader.containsFlag(EXACT_FLAG);
 			SearchResultIndex model = new SearchResultIndexMap();
-			Path outputFile = reader.containsFlag("-results") // TODO - make -results and results.json GLOBAL VALUE
-					? reader.getPath("-results", Path.of("results.json"))
-					: null;
+			Path outputFile = reader.containsFlag(OUTPUT_FLAG)
+					? reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT)
+					: NO_FLAG_OUTPUT;
 			GenericTextFileView<SearchResultIndex> view
 				= new GenericTextFileView<>(model, outputFile);
 			SearchResultIndexController controller
 				= new TextFileSearchResultIndexController(model, view);
 			StemMatchingStrategy matchingStrategy
 			= shouldDoExactSearch ? EXACT_MATCH : PARTIAL_MATCH;
-			Path queryFile = reader.getPath("-query", null); // TODO: Make query flag GLOBAL VALUE
+			Path queryFile = reader.getPath(QUERY_FLAG, DEFAULT_QUERY);
 			TextStemmer<String> stemmer = new TextLineStemmer();
 			StemCounterSearcher searcher
 				= new SimpleStemCounterSearcher(

@@ -1,6 +1,7 @@
 package configurations.modular_configs;
 
 import java.io.IOException;
+
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Map;
@@ -19,6 +20,12 @@ import views.GenericTextFileView;
 
 public class StemCounterConfig implements ModularConfig {
 	
+	/** Flags and outputs as decided by project requirements */
+	private final static String OUTPUT_FLAG = "-counts";
+	
+	private final static Path DEFAULT_OUTPUT = Path.of("counts.json");
+	
+	/** Config vars */
 	public final InvertedIndexWithSnapshot invertedIndex;
 	
 	public final InvertedIndexSnapshotCounter invertedIndexSnapshotCounter;
@@ -79,7 +86,7 @@ public class StemCounterConfig implements ModularConfig {
 		@Override
 		public StemCounterConfig createConfig() {
 			StemCounter model = new StemCounterTable();
-			Path outputFile = reader.getPath("-counts", Path.of("counts.json")); // TODO: Make -counts and counts.json global static values
+			Path outputFile = reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT);
 			GenericTextFileView<StemCounter> view
 				= new GenericTextFileView<>(model, outputFile);
 			StemCounterController controller
