@@ -1,7 +1,6 @@
 package controllers.stem_counting;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Map;
 
 import com.google.common.collect.RowSortedTable;

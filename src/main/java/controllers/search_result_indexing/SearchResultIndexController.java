@@ -1,4 +1,4 @@
-package controllers.sesarch_result_indexing;
+package controllers.search_result_indexing;
 
 import java.util.Map;
 import java.util.Set;

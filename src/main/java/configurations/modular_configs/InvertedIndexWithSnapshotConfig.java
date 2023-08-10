@@ -1,5 +1,10 @@
 package configurations.modular_configs;
 
+import static configurations.StaticGlobalValues.DEFAULT_INVERTED_INDEX_OUTPUT;
+import static configurations.StaticGlobalValues.INVERTED_INDEX_OUTPUT;
+import static configurations.StaticGlobalValues.NO_TEXT_FLAG_INDEX_OUTPUT;
+import static configurations.StaticGlobalValues.TEXT_SOURCE;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
@@ -8,7 +13,6 @@ import java.util.Map;
 import configurations.argument_parsing.CommandLineReader;
 import controllers.stem_indexing.InvertedIndexController;
 import controllers.stem_indexing.TextFileInvertedIndexController;
-import data.stem_indexing.InvertedIndex;
 import data.stem_indexing.InvertedIndexTable;
 import data.stem_indexing.InvertedIndexWithSnapshot;
 import data_reading.stem_indexing.StemReader;
@@ -20,8 +24,6 @@ import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
-
-import static configurations.StaticGlobalValues.*;
 
 public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 	

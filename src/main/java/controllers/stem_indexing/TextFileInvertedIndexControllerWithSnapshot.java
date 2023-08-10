@@ -5,10 +5,8 @@ import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 
-import data.AbstractStringKeyTable;
 import data.stem_indexing.InvertedIndex;
 import data.stem_indexing.InvertedIndexWithSnapshot;
-import views.DataToTextFileView;
 import views.GenericTextFileView;
 
 public class TextFileInvertedIndexControllerWithSnapshot implements InvertedIndexControllerWithSnapshot {

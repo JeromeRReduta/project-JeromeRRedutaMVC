@@ -1,6 +1,5 @@
 package configurations.modular_configs;
 
-import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy;
 import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy.EXACT_MATCH;
 import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy.PARTIAL_MATCH;
 
@@ -10,13 +9,14 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import configurations.argument_parsing.CommandLineReader;
-import controllers.sesarch_result_indexing.SearchResultIndexController;
-import controllers.sesarch_result_indexing.TextFileSearchResultIndexController;
+import controllers.search_result_indexing.SearchResultIndexController;
+import controllers.search_result_indexing.TextFileSearchResultIndexController;
 import data.search_result_indexing.SearchResultIndex;
 import data.search_result_indexing.SearchResultIndexMap;
 import data.stem_counting.StemCounter;
 import data_reading.search_result_indexing.SimpleStemCounterSearcher;
 import data_reading.search_result_indexing.StemCounterSearcher;
+import data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy;
 import data_reading.stem_indexing.TextLineStemmer;
 import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;

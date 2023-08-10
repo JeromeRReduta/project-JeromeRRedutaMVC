@@ -10,7 +10,6 @@ import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.TreeBasedTable;
 
 import data.AbstractStringKeyTable;
-import data.SearchEngineStringKeyTable;
 import json.JsonMapWriter;
 import json.JsonTableWriter;
 import json.JsonWriter;

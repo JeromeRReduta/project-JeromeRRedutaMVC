@@ -1,7 +1,7 @@
 package workflows;
 
 import controllers.JsonWriteableController;
-import controllers.sesarch_result_indexing.SearchResultIndexController;
+import controllers.search_result_indexing.SearchResultIndexController;
 import controllers.stem_counting.StemCounterController;
 import data_reading.search_result_indexing.StemCounterSearcher;
 import data_reading.stem_counting.InvertedIndexSnapshotCounter;

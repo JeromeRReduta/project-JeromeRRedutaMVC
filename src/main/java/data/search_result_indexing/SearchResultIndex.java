@@ -1,8 +1,8 @@
 package data.search_result_indexing;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;

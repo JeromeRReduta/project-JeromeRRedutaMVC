@@ -3,7 +3,6 @@ package configurations.modular_configs;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.List;
 
 import json.JsonCollectionWriter;
 import json.JsonWriteable;

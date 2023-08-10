@@ -3,7 +3,7 @@ package apps;
 import java.nio.file.Path;
 
 import configurations.modular_configs.ModularProject2Config;
-import controllers.sesarch_result_indexing.SearchResultIndexController;
+import controllers.search_result_indexing.SearchResultIndexController;
 import controllers.stem_counting.StemCounterController;
 import controllers.stem_indexing.InvertedIndexController;
 import data_reading.search_result_indexing.StemCounterSearcher;

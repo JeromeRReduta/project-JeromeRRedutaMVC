@@ -3,7 +3,6 @@ package views;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import data.stem_indexing.InvertedIndex;
 import json.JsonWriteable;
 
 public final class GenericTextFileView<E extends JsonWriteable>

@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.TreeSet;
 
 import configurations.argument_parsing.CommandLineReader;
 import controllers.stem_counting.StemCounterController;
 import controllers.stem_counting.TextFileStemCounterController;
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
-import data.stem_indexing.InvertedIndex;
 import data.stem_indexing.InvertedIndexWithSnapshot;
 import data_reading.stem_counting.InvertedIndexSnapshotCounter;
 import data_reading.stem_counting.SimpleInvertedIndexSnapshotCounter;
-import data_reading.stem_counting.StringKeyTableValueTransformer;
 import json.JsonMapWriter;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
