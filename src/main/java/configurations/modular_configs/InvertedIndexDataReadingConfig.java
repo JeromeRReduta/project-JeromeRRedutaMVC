@@ -5,15 +5,15 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Map;
 
-import argument_parsing.CommandLineReader;
-import data.InvertedIndex;
+import configurations.argument_parsing.CommandLineReader;
+import data.stem_indexing.InvertedIndex;
+import data_reading.stem_indexing.StemReader;
+import data_reading.stem_indexing.TextFileFinder;
+import data_reading.stem_indexing.TextFileStemReader;
+import data_reading.stem_indexing.TextFileStemmer;
+import data_reading.stem_indexing.TextSourceFinder;
+import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
-import stem_reading.StemReader;
-import stem_reading.text_finding.TextSourceFinder;
-import stem_reading.text_stemming.TextStemmer;
-import stem_reading.text_finding.TextFileFinder;
-import stem_reading.text_stemming.TextFileStemmer;
-import stem_reading.TextFileStemReader;
 
 import static configurations.StaticGlobalValues.*;
 

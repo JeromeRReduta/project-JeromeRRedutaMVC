@@ -1,25 +1,26 @@
 package configurations.modular_configs;
 
+import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy;
+import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy.EXACT_MATCH;
+import static data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy.PARTIAL_MATCH;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Map;
 
-import argument_parsing.CommandLineReader;
-import controllers.SearchResultIndexController;
-import controllers.TextFileSearchResultIndexController;
-import data.search_results.SearchResultIndex;
-import data.search_results.SearchResultIndexMap;
+import configurations.argument_parsing.CommandLineReader;
+import controllers.sesarch_result_indexing.SearchResultIndexController;
+import controllers.sesarch_result_indexing.TextFileSearchResultIndexController;
+import data.search_result_indexing.SearchResultIndex;
+import data.search_result_indexing.SearchResultIndexMap;
 import data.stem_counting.StemCounter;
+import data_reading.search_result_indexing.SimpleStemCounterSearcher;
+import data_reading.search_result_indexing.StemCounterSearcher;
+import data_reading.stem_indexing.TextLineStemmer;
+import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
-import stem_counter_searching.SimpleStemCounterSearcher;
-import stem_counter_searching.StemCounterSearcher;
-import stem_reading.text_stemming.TextStemmer;
-import stem_reading.text_stemming.TextLineStemmer;
 import views.GenericTextFileView;
-import static stem_counter_searching.StemCounterSearcher.StemMatchingStrategy.PARTIAL_MATCH;
-import static stem_counter_searching.StemCounterSearcher.StemMatchingStrategy.EXACT_MATCH;
-import static stem_counter_searching.StemCounterSearcher.StemMatchingStrategy;
 
 public class SearchResultIndexConfig implements ModularConfig {
 	

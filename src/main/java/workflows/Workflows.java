@@ -1,11 +1,11 @@
 package workflows;
 
 import controllers.JsonWriteableController;
-import controllers.SearchResultIndexController;
-import controllers.StemCounterController;
-import stem_counter_searching.StemCounterSearcher;
-import stem_reading.StemReader;
-import table_value_transforming.InvertedIndexSnapshotCounter;
+import controllers.sesarch_result_indexing.SearchResultIndexController;
+import controllers.stem_counting.StemCounterController;
+import data_reading.search_result_indexing.StemCounterSearcher;
+import data_reading.stem_counting.InvertedIndexSnapshotCounter;
+import data_reading.stem_indexing.StemReader;
 
 /**
  * A workflow that reads data into an Inverted Index

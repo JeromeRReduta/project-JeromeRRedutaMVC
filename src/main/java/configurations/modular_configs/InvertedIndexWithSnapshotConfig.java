@@ -5,21 +5,22 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Map;
 
-import argument_parsing.CommandLineReader;
-import controllers.InvertedIndexController;
-import controllers.TextFileInvertedIndexController;
-import data.InvertedIndex;
-import data.InvertedIndexTable;
-import data.InvertedIndexWithSnapshot;
+import configurations.argument_parsing.CommandLineReader;
+import controllers.stem_indexing.InvertedIndexController;
+import controllers.stem_indexing.TextFileInvertedIndexController;
+import data.stem_indexing.InvertedIndex;
+import data.stem_indexing.InvertedIndexTable;
+import data.stem_indexing.InvertedIndexWithSnapshot;
+import data_reading.stem_indexing.StemReader;
+import data_reading.stem_indexing.TextFileFinder;
+import data_reading.stem_indexing.TextFileStemReader;
+import data_reading.stem_indexing.TextFileStemmer;
+import data_reading.stem_indexing.TextSourceFinder;
+import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
-import stem_reading.StemReader;
-import stem_reading.text_finding.TextSourceFinder;
-import stem_reading.text_stemming.TextStemmer;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
-import stem_reading.TextFileStemReader;
-import stem_reading.text_finding.TextFileFinder;
-import stem_reading.text_stemming.TextFileStemmer;
+
 import static configurations.StaticGlobalValues.*;
 
 public class InvertedIndexWithSnapshotConfig implements ModularConfig {

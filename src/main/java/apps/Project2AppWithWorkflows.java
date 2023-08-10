@@ -3,12 +3,12 @@ package apps;
 import java.nio.file.Path;
 
 import configurations.modular_configs.ModularProject2Config;
-import controllers.InvertedIndexController;
-import controllers.SearchResultIndexController;
-import controllers.StemCounterController;
-import stem_counter_searching.StemCounterSearcher;
-import stem_reading.StemReader;
-import table_value_transforming.InvertedIndexSnapshotCounter;
+import controllers.sesarch_result_indexing.SearchResultIndexController;
+import controllers.stem_counting.StemCounterController;
+import controllers.stem_indexing.InvertedIndexController;
+import data_reading.search_result_indexing.StemCounterSearcher;
+import data_reading.stem_counting.InvertedIndexSnapshotCounter;
+import data_reading.stem_indexing.StemReader;
 import workflows.Workflows;
 
 public class Project2AppWithWorkflows implements

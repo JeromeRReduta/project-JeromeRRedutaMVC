@@ -1,6 +1,6 @@
 package workflows;
 
-import table_value_transforming.InvertedIndexSnapshotCounter;
-import table_value_transforming.StringKeyTableValueTransformer;
+import data_reading.stem_counting.InvertedIndexSnapshotCounter;
+import data_reading.stem_counting.StringKeyTableValueTransformer;
 
 

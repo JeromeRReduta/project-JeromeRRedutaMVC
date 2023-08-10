@@ -3,8 +3,8 @@ package apps;
 import java.nio.file.Path;
 
 import configurations.deprecated_configs.Project1Config;
-import controllers.InvertedIndexController;
-import stem_reading.StemReader;
+import controllers.stem_indexing.InvertedIndexController;
+import data_reading.stem_indexing.StemReader;
 
 /**
  * App logic for project 1

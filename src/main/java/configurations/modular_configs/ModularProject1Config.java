@@ -6,16 +6,16 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-import argument_parsing.ArgumentMap;
-import argument_parsing.CommandLineReader;
-import controllers.InvertedIndexController;
-import data.InvertedIndex;
-import data.InvertedIndexTable;
+import configurations.argument_parsing.ArgumentMap;
+import configurations.argument_parsing.CommandLineReader;
+import controllers.stem_indexing.InvertedIndexController;
+import data.stem_indexing.InvertedIndex;
+import data.stem_indexing.InvertedIndexTable;
+import data_reading.stem_indexing.StemReader;
+import data_reading.stem_indexing.TextFileStemmer;
+import data_reading.stem_indexing.TextSourceFinder;
+import data_reading.stem_indexing.TextStemmer;
 import json.JsonCollectionWriter;
-import stem_reading.StemReader;
-import stem_reading.text_finding.TextSourceFinder;
-import stem_reading.text_stemming.TextFileStemmer;
-import stem_reading.text_stemming.TextStemmer;
 import views.GenericTextFileView;
 
 /**

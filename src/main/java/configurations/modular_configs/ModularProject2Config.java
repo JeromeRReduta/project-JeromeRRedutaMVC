@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import argument_parsing.ArgumentMap;
-import argument_parsing.CommandLineReader;
-import data.InvertedIndex;
-import data.InvertedIndexTable;
+import configurations.argument_parsing.ArgumentMap;
+import configurations.argument_parsing.CommandLineReader;
+import data.search_result_indexing.SearchResultIndex;
+import data.search_result_indexing.SearchResultIndexMap;
 import data.stem_counting.StemCounter;
 import data.stem_counting.StemCounterTable;
-import data.search_results.SearchResultIndex;
-import data.search_results.SearchResultIndexMap;
+import data.stem_indexing.InvertedIndex;
+import data.stem_indexing.InvertedIndexTable;
 
 public class ModularProject2Config implements ModularConfig {
 	
