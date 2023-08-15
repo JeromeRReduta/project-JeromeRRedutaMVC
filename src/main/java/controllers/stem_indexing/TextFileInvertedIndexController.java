@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-import data.stem_indexing.InvertedIndex;
+import models.stem_indexing.InvertedIndex;
 import views.DataToTextFileView;
 
 /**

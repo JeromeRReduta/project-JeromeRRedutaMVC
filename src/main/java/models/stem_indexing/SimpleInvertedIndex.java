@@ -1,4 +1,4 @@
-package data.stem_indexing;
+package models.stem_indexing;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -10,7 +10,7 @@ import json.JsonMapWriter;
 import json.JsonWriteable;
 
 public class SimpleInvertedIndex
-	extends TreeMap<String, data.stem_indexing.SimpleInvertedIndex.FileNamePositionMap>
+	extends TreeMap<String, models.stem_indexing.SimpleInvertedIndex.FileNamePositionMap>
 	implements InvertedIndex {
 
 	/**
@@ -76,7 +76,7 @@ public class SimpleInvertedIndex
 	
 	/** Implementation of the inner map, holding FileName-StemPositionSet pairs */
 	public class FileNamePositionMap
-		extends TreeMap<String, data.stem_indexing.SimpleInvertedIndex.StemPositionSet>
+		extends TreeMap<String, models.stem_indexing.SimpleInvertedIndex.StemPositionSet>
 		implements JsonWriteable, Cloneable {
 		
 		/**

@@ -5,10 +5,15 @@ import java.util.TreeSet;
 
 import com.google.common.collect.RowSortedTable;
 
-import data.stem_indexing.InvertedIndex;
-import data.stem_indexing.InvertedIndexWithSnapshot;
+import models.stem_indexing.InvertedIndex;
+import models.stem_indexing.InvertedIndexWithSnapshot;
 import views.GenericTextFileView;
 
+/**
+ * An implementation of the InvertedIndexControllerWithSnapshot for text files
+ * @author JRRed
+ *
+ */
 public class TextFileInvertedIndexControllerWithSnapshot implements InvertedIndexControllerWithSnapshot {
 	
 	private InvertedIndexWithSnapshot invertedIndex;
@@ -17,7 +22,7 @@ public class TextFileInvertedIndexControllerWithSnapshot implements InvertedInde
 	
 	public TextFileInvertedIndexControllerWithSnapshot(
 			InvertedIndexWithSnapshot invertedIndex,
-		 GenericTextFileView<InvertedIndex> view) {
+			GenericTextFileView<InvertedIndex> view) {
 		this.invertedIndex = invertedIndex;
 		this.view = view;
 	}

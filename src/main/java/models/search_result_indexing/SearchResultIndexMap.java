@@ -1,4 +1,4 @@
-package data.search_result_indexing;
+package models.search_result_indexing;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -13,6 +13,11 @@ import json.JsonMapWriter;
 import json.JsonWriteable;
 import json.JsonWriter;
 
+/**
+ * Map implementation of SearchResultIndex
+ * @author JRRed
+ *
+ */
 public class SearchResultIndexMap
 	extends TreeMap<String, TreeSet<SearchResultIndex.SearchResult>>
 	implements SearchResultIndex, JsonWriteable {
@@ -29,12 +34,11 @@ public class SearchResultIndexMap
 			return;
 		}
 		super.get(queryAsLine).add(result);
-		
 	}
 
 	@Override
 	public void addAll(String queryAsLine, Collection<SearchResult> results) {
-		super.putIfAbsent(queryAsLine, new TreeSet<>());
+		super.putIfAbsent(queryAsLine, new TreeSet<>()); // Note that even if there are no search results, we still create a new treeset. This is because the tests expect an empty treeset if we have no actual matches
 		Collection<SearchResult> data = super.get(queryAsLine);
 		results.stream()
 			.filter(result -> result != null)

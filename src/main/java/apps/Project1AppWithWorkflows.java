@@ -9,12 +9,14 @@ import workflows.Workflows;
 
 /**
  * Mock class created to make sure workflows work the way I think they do, and that they can be used
- * in place of manually writing "if isRequested controller.tryThis()". If it works, then we can simply
- * use the workflows, which makes the code more modular and hopefully a little less error-prone.
+ * in place of manually writing "if isRequested controller.tryThis()". If it works, then we can
+ * simply use the workflows, which makes the code more modular and hopefully a little less
+ * error-prone.
  * @author JRRed
  *
  */
 public class Project1AppWithWorkflows implements App {
+	
 	private StemReader<Path> stemReader;
 	
 	private InvertedIndexController controller;
@@ -29,11 +31,12 @@ public class Project1AppWithWorkflows implements App {
 		this.readDataIsRequested = config.sourceFile != null;
 		this.outputToFileIsRequested = config.outputFile != null;
 	}
+	
 	@Override
 	public void run() {
 		Workflows.ReadIntoInvertedIndex
 			.runIfRequested(readDataIsRequested, stemReader);
-		Workflows.DisplayIndex
+		Workflows.DisplayInvertedIndex
 			.runIfRequested(outputToFileIsRequested, controller);
 	}
 }

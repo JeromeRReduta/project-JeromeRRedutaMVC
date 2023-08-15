@@ -4,11 +4,18 @@ import java.util.Map;
 import java.util.Set;
 
 import controllers.JsonWriteableController;
-import data.search_result_indexing.SearchResultIndex.SearchResult;
+import models.search_result_indexing.SearchResultIndex.SearchResult;
 
-public interface SearchResultIndexController
-	extends JsonWriteableController {
+/**
+ * Controller for a search result index
+ * @author JRRed
+ *
+ */
+public interface SearchResultIndexController extends JsonWriteableController {
 	
+	/**
+	 * Returns a snapshot of the search result index's state
+	 * @return A snapshot of the search result index
+	 */
 	Map<String, ? extends Set<SearchResult>> snapshot();
-
 }

@@ -1,4 +1,4 @@
-package data.stem_counting;
+package models.stem_counting;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -9,15 +9,19 @@ import java.util.TreeMap;
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.TreeBasedTable;
 
-import data.AbstractStringKeyTable;
 import json.JsonMapWriter;
 import json.JsonTableWriter;
 import json.JsonWriter;
+import models.AbstractStringKeyTable;
 
-public class StemCounterTable
-	extends AbstractStringKeyTable<Integer>
-	implements StemCounter {
+/**
+ * Table based implementation of StemCounter.
+ * @author JRRed
+ *
+ */
+public class StemCounterTable extends AbstractStringKeyTable<Integer> implements StemCounter {
 	
+	/** This lets us track total stems based on each fileName */
 	private Map<String, Integer> stemCountsByFile;
 	
 	public StemCounterTable() {
@@ -55,10 +59,11 @@ public class StemCounterTable
 	}
 
 	@Override
-	public String toString() {
+	public String toString() { // Note that we're not using toJsonString() b/c we want to output both the table and map data structures
 		try {
 			Writer writer = new StringWriter();
-			JsonTableWriter<String, String, Integer> tableWriter = (bI, w, e) -> JsonWriter.writeIndented(bI, writer, e.toString());
+			JsonTableWriter<String, String, Integer> tableWriter
+				= (bI, w, e) -> JsonWriter.writeIndented(bI, writer, e.toString());
 			tableWriter.writeAllElements(0, writer, backingTable);
 			writer.write("__________________________________\n");
 			writer.write("Totals by filename: \n");

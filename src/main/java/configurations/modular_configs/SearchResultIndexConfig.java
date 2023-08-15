@@ -11,17 +11,22 @@ import java.util.Map;
 import configurations.argument_parsing.CommandLineReader;
 import controllers.search_result_indexing.SearchResultIndexController;
 import controllers.search_result_indexing.TextFileSearchResultIndexController;
-import data.search_result_indexing.SearchResultIndex;
-import data.search_result_indexing.SearchResultIndexMap;
-import data.stem_counting.StemCounter;
 import data_reading.search_result_indexing.SimpleStemCounterSearcher;
 import data_reading.search_result_indexing.StemCounterSearcher;
 import data_reading.search_result_indexing.StemCounterSearcher.StemMatchingStrategy;
 import data_reading.stem_indexing.TextLineStemmer;
 import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
+import models.search_result_indexing.SearchResultIndex;
+import models.search_result_indexing.SearchResultIndexMap;
+import models.stem_counting.StemCounter;
 import views.GenericTextFileView;
 
+/**
+ * Modular Config for the search result index MVC and data reading
+ * @author JRRed
+ *
+ */
 public class SearchResultIndexConfig implements ModularConfig {
 	
 	/** Flags and outputs as decided by project requirements */
@@ -88,15 +93,18 @@ public class SearchResultIndexConfig implements ModularConfig {
 		JsonMapWriter.writeMap(baseIndent, writer, configAsMap);
 	}
 	
+	/**
+	 * Factory pattern
+	 * @author JRRed
+	 *
+	 */
 	public static class Factory implements ModularConfig.Factory<SearchResultIndexConfig> {
 
 		private final CommandLineReader reader;
 		
 		private final StemCounter stemCounter;
 		
-		public Factory(
-				CommandLineReader reader,
-				StemCounter stemCounter) {
+		public Factory(CommandLineReader reader, StemCounter stemCounter) {
 			this.reader = reader;
 			this.stemCounter = stemCounter;
 		}
@@ -108,16 +116,13 @@ public class SearchResultIndexConfig implements ModularConfig {
 			Path outputFile = reader.containsFlag(OUTPUT_FLAG)
 					? reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT)
 					: NO_FLAG_OUTPUT;
-			GenericTextFileView<SearchResultIndex> view
-				= new GenericTextFileView<>(model, outputFile);
+			GenericTextFileView<SearchResultIndex> view = new GenericTextFileView<>(model, outputFile);
 			SearchResultIndexController controller
 				= new TextFileSearchResultIndexController(model, view);
-			StemMatchingStrategy matchingStrategy
-			= shouldDoExactSearch ? EXACT_MATCH : PARTIAL_MATCH;
+			StemMatchingStrategy matchingStrategy = shouldDoExactSearch ? EXACT_MATCH : PARTIAL_MATCH;
 			Path queryFile = reader.getPath(QUERY_FLAG, DEFAULT_QUERY);
 			TextStemmer<String> stemmer = new TextLineStemmer();
-			StemCounterSearcher searcher
-				= new SimpleStemCounterSearcher(
+			StemCounterSearcher searcher = new SimpleStemCounterSearcher(
 						stemCounter,
 						queryFile,
 						stemmer,
@@ -133,8 +138,6 @@ public class SearchResultIndexConfig implements ModularConfig {
 					stemmer,
 					queryFile,
 					outputFile);
-			
 		}
 	}
-
 }

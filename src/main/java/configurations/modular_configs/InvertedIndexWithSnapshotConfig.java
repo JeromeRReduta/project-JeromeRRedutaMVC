@@ -8,8 +8,6 @@ import java.util.Map;
 import configurations.argument_parsing.CommandLineReader;
 import controllers.stem_indexing.InvertedIndexController;
 import controllers.stem_indexing.TextFileInvertedIndexController;
-import data.stem_indexing.InvertedIndexTable;
-import data.stem_indexing.InvertedIndexWithSnapshot;
 import data_reading.stem_indexing.StemReader;
 import data_reading.stem_indexing.TextFileFinder;
 import data_reading.stem_indexing.TextFileStemReader;
@@ -17,9 +15,16 @@ import data_reading.stem_indexing.TextFileStemmer;
 import data_reading.stem_indexing.TextSourceFinder;
 import data_reading.stem_indexing.TextStemmer;
 import json.JsonMapWriter;
+import models.stem_indexing.InvertedIndexTable;
+import models.stem_indexing.InvertedIndexWithSnapshot;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
 
+/**
+ * Config for an InvertedIndex with snapshot MVC and data reading
+ * @author JRRed
+ *
+ */
 public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 	
 	/** Flags and outputs as decided by project requirements */
@@ -47,7 +52,6 @@ public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 	public final InvertedIndexController controller;
 	
 	public final Path outputFile;
-	
 	
 	private InvertedIndexWithSnapshotConfig(
 			Path inputFile,
@@ -82,12 +86,16 @@ public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 		JsonMapWriter.writeMap(baseIndent, writer, configAsMap);
 	}
 	
+	/**
+	 * Factory pattern for this config
+	 * @author JRRed
+	 *
+	 */
 	public static class Factory implements ModularConfig.Factory<InvertedIndexWithSnapshotConfig> {
 		
 		private CommandLineReader reader;
 		
-		public Factory(
-				CommandLineReader reader) {
+		public Factory(CommandLineReader reader) {
 			this.reader = reader;
 		}
 
@@ -97,15 +105,13 @@ public class InvertedIndexWithSnapshotConfig implements ModularConfig {
 			InvertedIndexWithSnapshot model = new InvertedIndexTable();
 			TextSourceFinder<Path> textFileFinder = new TextFileFinder(inputFile);
 			TextStemmer<Path> textFileStemmer = new TextFileStemmer();
-			StemReader<Path> stemReader = new TextFileStemReader(
-					model, textFileFinder, textFileStemmer);
+			StemReader<Path> stemReader
+				= new TextFileStemReader(model, textFileFinder, textFileStemmer);
 			Path outputFile = reader.containsFlag(OUTPUT_FLAG)
 					? reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT)
 					: NO_FLAG_OUTPUT;
-			DataToTextFileView view
-					= new GenericTextFileView<>(model, outputFile);
-			InvertedIndexController controller
-				= new TextFileInvertedIndexController(model, view);
+			DataToTextFileView view = new GenericTextFileView<>(model, outputFile);
+			InvertedIndexController controller = new TextFileInvertedIndexController(model, view);
 			return new InvertedIndexWithSnapshotConfig(
 					inputFile,
 					textFileFinder,

@@ -1,4 +1,4 @@
-package data.stem_counting;
+package models.stem_counting;
 
 import java.util.Map;
 

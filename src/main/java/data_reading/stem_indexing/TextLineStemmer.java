@@ -12,7 +12,7 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
- * Implementation of TextStemmer for a text source, given as a Path
+ * Implementation of TextStemmer for a single line of text
  * @author JRRed
  *
  */
@@ -37,7 +37,7 @@ public class TextLineStemmer implements TextStemmer<String> {
 				TextParser.getTokenStream(textSource),
 				TreeSet::new);
 	}
-	
+
 	private <C extends Collection<String>> C stemTokenStream(
 			Stream<String> tokenStream,
 			Supplier<C> supplier) {

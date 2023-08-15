@@ -9,15 +9,20 @@ import java.util.Map;
 import configurations.argument_parsing.CommandLineReader;
 import controllers.stem_counting.StemCounterController;
 import controllers.stem_counting.TextFileStemCounterController;
-import data.stem_counting.StemCounter;
-import data.stem_counting.StemCounterTable;
-import data.stem_indexing.InvertedIndexWithSnapshot;
 import data_reading.stem_counting.InvertedIndexSnapshotCounter;
 import data_reading.stem_counting.SimpleInvertedIndexSnapshotCounter;
 import json.JsonMapWriter;
+import models.stem_counting.StemCounter;
+import models.stem_counting.StemCounterTable;
+import models.stem_indexing.InvertedIndexWithSnapshot;
 import views.DataToTextFileView;
 import views.GenericTextFileView;
 
+/**
+ * Modular config for the StemCounter MVC and data reading
+ * @author JRRed
+ *
+ */
 public class StemCounterConfig implements ModularConfig {
 	
 	/** Flags and outputs as decided by project requirements */
@@ -51,7 +56,6 @@ public class StemCounterConfig implements ModularConfig {
 		this.view = view;
 		this.controller = controller;
 		this.outputFile = outputFile;
-		
 	}
 	
 	@Override
@@ -71,14 +75,18 @@ public class StemCounterConfig implements ModularConfig {
 		return toJsonString();
 	}
 	
+	/**
+	 * Factory pattern
+	 * @author JRRed
+	 *
+	 */
 	public static class Factory implements ModularConfig.Factory<StemCounterConfig> {
 
 		private final CommandLineReader reader;
 		
 		private final InvertedIndexWithSnapshot invertedIndex;
 		
-		public Factory(
-				CommandLineReader reader, InvertedIndexWithSnapshot invertedIndex) {
+		public Factory(CommandLineReader reader, InvertedIndexWithSnapshot invertedIndex) {
 			this.reader = reader;
 			this.invertedIndex = invertedIndex;
 		}
@@ -87,10 +95,8 @@ public class StemCounterConfig implements ModularConfig {
 		public StemCounterConfig createConfig() {
 			StemCounter model = new StemCounterTable();
 			Path outputFile = reader.getPath(OUTPUT_FLAG, DEFAULT_OUTPUT);
-			GenericTextFileView<StemCounter> view
-				= new GenericTextFileView<>(model, outputFile);
-			StemCounterController controller
-				= new TextFileStemCounterController(model, view);
+			GenericTextFileView<StemCounter> view = new GenericTextFileView<>(model, outputFile);
+			StemCounterController controller = new TextFileStemCounterController(model, view);
 			InvertedIndexSnapshotCounter invertedIndexSnapshotCounter
 				= new SimpleInvertedIndexSnapshotCounter(invertedIndex, model);
 			return new StemCounterConfig(

@@ -1,4 +1,4 @@
-package data;
+package models;
 
 import java.util.Collection;
 import java.util.Map;
@@ -10,8 +10,13 @@ import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 
-public abstract class AbstractStringKeyTable<V>
-	implements SearchEngineStringKeyTable<V> {
+/**
+ * Abstract implementation of SearchEngineStringKeyTable
+ * @author JRRed
+ *
+ * @param <V> Value type
+ */
+public abstract class AbstractStringKeyTable<V> implements SearchEngineStringKeyTable<V> {
 	
 	protected RowSortedTable<String, String, V> backingTable;
 	
@@ -71,7 +76,6 @@ public abstract class AbstractStringKeyTable<V>
 	@Override
 	public void clear() {
 		backingTable.clear();
-		
 	}
 
 	@Override

@@ -24,11 +24,9 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		Instant start = Instant.now(); // store initial start time
-		ModularProject2Config config
-			= new ModularProject2Config.Factory(args).createConfig();
+		ModularProject2Config config = new ModularProject2Config.Factory(args).createConfig();
 		App app = new Project2AppWithWorkflows(config);
 		app.run();
-		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now()); 
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();

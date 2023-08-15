@@ -1,80 +1,51 @@
 package workflows;
 
 import controllers.JsonWriteableController;
-import controllers.search_result_indexing.SearchResultIndexController;
-import controllers.stem_counting.StemCounterController;
+import controllers.stem_indexing.InvertedIndexController;
 import data_reading.search_result_indexing.StemCounterSearcher;
 import data_reading.stem_counting.InvertedIndexSnapshotCounter;
 import data_reading.stem_indexing.StemReader;
 
 /**
- * A workflow that reads data into an Inverted Index
+ * Collection of workflows to make app logic more modular
  * @author JRRed
- *
  */
-public interface Workflows {
+public interface Workflows<E> {
 	
+	/**
+	 * Runs an object's operation if requested
+	 * @param isRequested if the operation is requested
+	 * @param object some object
+	 */
+	void runIfRequested(boolean isRequested, E object);
 	
-	static interface ReadIntoInvertedIndex {
-		/**
-		 * If requested, reads data into an inverted index using a stem reader
-		 * @param isRequested should we read?
-		 * @param reader StemReader
-		 */
-		static void runIfRequested(boolean isRequested, StemReader<?> reader) {
-			if (isRequested) {
-				reader.tryReadingIntoInvertedIndex();
-			}
+	static Workflows<StemReader<?>> ReadIntoInvertedIndex = (isRequested, stemReader) -> {
+		if (isRequested) {
+			stemReader.tryReadingIntoInvertedIndex();
 		}
-	}
+	};
 	
-	static interface DisplayIndex {
-		
-		/**
-		 * If requested, attempts to write a JSONWriteable to a file.
-		 * @param isRequested should we write?
-		 * @param controller JsonWriteableController. Rare case where we want any and all JsonWriteableControllers.
-		 */
-		static void runIfRequested(boolean isRequested, JsonWriteableController controller) {
-			if (isRequested) {
-				controller.tryDisplaying();
-			}
+	static Workflows<InvertedIndexController> DisplayInvertedIndex = (isRequested, controller) -> {
+		if (isRequested) {
+			controller.tryDisplaying();
 		}
-	}
+	};
 	
-	static interface ReadIntoStemCounter {
-		
-		static void runIfRequested(boolean isRequested, InvertedIndexSnapshotCounter snapshotCounter) {
-			if (isRequested) {
-				snapshotCounter.countStems(); // TODO - make this a tryCountingStems()
-			}
+	static Workflows<JsonWriteableController> Display = (isRequested, controller) -> {
+		if (isRequested) {
+			controller.tryDisplaying();
 		}
-	}
+	};
 	
-	static interface DisplayStemCounter {
-		
-		static void runIfRequested(boolean isRequested, StemCounterController controller) {
-			if (isRequested) {
-				controller.tryDisplaying();
-			}
+	static Workflows<InvertedIndexSnapshotCounter> ReadIntoStemCounter = (isRequested, counter) -> {
+		if (isRequested) {
+			counter.tryCountingStems();
 		}
-	}
+	};
 	
-	static interface ReadIntoSearchResultIndex {
-		
-		static void runIfRequested(boolean isRequested, StemCounterSearcher searcher) {
-			if (isRequested) {
-				searcher.trySearchingStemCounter();
-			}
+	static Workflows<StemCounterSearcher> ReadIntoSearchResultIndex = (isRequested, searcher) -> {
+		if (isRequested) {
+			searcher.trySearchingStemCounter();
 		}
-	}
-	
-	static interface DisplaySearchResultIndex {
-		
-		static void runIfRequested(boolean isRequested, SearchResultIndexController controller) {
-			if (isRequested) {
-				controller.tryDisplaying();
-			}
-		}
-	}
+	};
 }

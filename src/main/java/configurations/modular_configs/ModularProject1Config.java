@@ -7,7 +7,7 @@ import configurations.argument_parsing.ArgumentMap;
 import configurations.argument_parsing.CommandLineReader;
 
 /**
- * Project 1 Implementation of Config
+ * Project 1 Implementation of a Modular Config
  * @author JRRed
  *
  */
@@ -24,10 +24,16 @@ public class ModularProject1Config implements ModularConfig {
 		invertedIndex.writeToJson(baseIndent, writer);
 	}
 	
+	@Override
 	public String toString() {
 		return toJsonString();
 	}
 	
+	/**
+	 * Factory pattern for this config
+	 * @author JRRed
+	 *
+	 */
 	public static class Factory implements ModularConfig.Factory<ModularProject1Config> {
 
 		private CommandLineReader reader;

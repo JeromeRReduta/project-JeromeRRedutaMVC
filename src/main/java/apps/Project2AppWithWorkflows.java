@@ -11,8 +11,8 @@ import data_reading.stem_counting.InvertedIndexSnapshotCounter;
 import data_reading.stem_indexing.StemReader;
 import workflows.Workflows;
 
-public class Project2AppWithWorkflows implements
-	App {
+/** App logic for Project 2, using workflows */
+public class Project2AppWithWorkflows implements App {
 	
 	private final boolean readTextFileIsRequested;
 	
@@ -37,22 +37,16 @@ public class Project2AppWithWorkflows implements
 	private final StemCounterSearcher searcher;
 	
 	private final SearchResultIndexController searchResultIndexController;
-
 	
 	public Project2AppWithWorkflows(ModularProject2Config config) {
-		this.readTextFileIsRequested
-			= config.forInvertedIndex.inputFile != null;
-		this.writeIndexIsRequested
-			= config.forInvertedIndex.outputFile != null;
+		this.readTextFileIsRequested = config.forInvertedIndex.inputFile != null;
+		this.writeIndexIsRequested = config.forInvertedIndex.outputFile != null;
 		this.stemReader = config.forInvertedIndex.stemReader;
 		this.invertedIndexController = config.forInvertedIndex.controller;
 		this.countIndexStemsIsRequested = true; // This is a default value - we always want to get the stem counter
-		this.writeStemCounterIsRequested
-			= config.forStemCounter.outputFile != null;
-		this.searchStemCounterIsRequested
-			= config.forSearchResults.queryFile != null;
-		this.writeSearchResultIndexIsRequested
-			= config.forSearchResults.outputFile != null;
+		this.writeStemCounterIsRequested = config.forStemCounter.outputFile != null;
+		this.searchStemCounterIsRequested = config.forSearchResults.queryFile != null;
+		this.writeSearchResultIndexIsRequested = config.forSearchResults.outputFile != null;
 		this.snapshotCounter = config.forStemCounter.invertedIndexSnapshotCounter;
 		this.stemCounterController = config.forStemCounter.controller;
 		this.searcher = config.forSearchResults.searcher;
@@ -61,17 +55,11 @@ public class Project2AppWithWorkflows implements
 	
 	@Override
 	public void run() {
-		Workflows.ReadIntoInvertedIndex
-			.runIfRequested(readTextFileIsRequested, stemReader);
-		Workflows.DisplayIndex
-			.runIfRequested(writeIndexIsRequested, invertedIndexController);
-		Workflows.ReadIntoStemCounter
-			.runIfRequested(countIndexStemsIsRequested, snapshotCounter);
-		Workflows.DisplayStemCounter
-			.runIfRequested(writeStemCounterIsRequested, stemCounterController);
-		Workflows.ReadIntoSearchResultIndex
-			.runIfRequested(searchStemCounterIsRequested, searcher);
-		Workflows.DisplaySearchResultIndex // found cause - I put queryFie into outputFile input on accident
-			.runIfRequested(writeSearchResultIndexIsRequested, searchResultIndexController);
+		Workflows.ReadIntoInvertedIndex.runIfRequested(readTextFileIsRequested, stemReader);
+		Workflows.Display.runIfRequested(writeIndexIsRequested, invertedIndexController);
+		Workflows.ReadIntoStemCounter.runIfRequested(countIndexStemsIsRequested, snapshotCounter);
+		Workflows.Display.runIfRequested(writeStemCounterIsRequested, stemCounterController);
+		Workflows.ReadIntoSearchResultIndex.runIfRequested(searchStemCounterIsRequested, searcher);
+		Workflows.Display.runIfRequested(writeSearchResultIndexIsRequested, searchResultIndexController);
 	}
 }

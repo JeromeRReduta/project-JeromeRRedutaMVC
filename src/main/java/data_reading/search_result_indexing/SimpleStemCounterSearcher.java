@@ -7,33 +7,39 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.RowSortedTable;
 
-import data.search_result_indexing.SearchResultIndex;
-import data.search_result_indexing.SearchResultIndex.SearchResult;
-import data.search_result_indexing.SearchResultIndex.SearchResultFactory;
-import data.stem_counting.StemCounter;
 import data_reading.stem_indexing.TextStemmer;
+import models.search_result_indexing.SearchResultIndex;
+import models.search_result_indexing.SearchResultIndex.SearchResult;
+import models.search_result_indexing.SearchResultIndex.SearchResultFactory;
+import models.stem_counting.StemCounter;
 
+/**
+ * Implementation of a StemCounterSearcher
+ * @author JRRed
+ *
+ */
 public class SimpleStemCounterSearcher implements StemCounterSearcher {
 	
 	private final StemCounter counter;
-	/*
-	private RowSortedTable<String, String, Integer> stemCountTableSnapshot;
 	
-	private Map<String, Integer> totalStemsByFileNameSnapshot;
-	*/
+	private final Path queries;
 	
-	private Path queries;
+	private final TextStemmer<String> stemmer;
 	
-	private TextStemmer<String> stemmer;
+	private final SearchResultIndex index;
 	
-	private SearchResultIndex index;
+	private final StemMatchingStrategy stemMatchingStrategy;
 	
-	private StemMatchingStrategy stemMatchingStrategy;
+	private RowSortedTable<String, String, Integer> tableSnapshot;
 	
+	private Map<String, Integer> totalStemsSnapshot;
+	
+	/** Finds any occurrence of "[", "]", or "," */
 	private static final String BRACKET_AND_COMMA_REGEX = "[\\[\\],]";
 	
 	public SimpleStemCounterSearcher(
@@ -48,26 +54,36 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 		this.index = index;
 		this.stemMatchingStrategy = stemMatchingStrategy;
 	}
+	
+	/**
+	 * Takes a snapshot of the stem counter's data structs and saves it to this instance
+	 */
+	private void updateStemCounterSnapshots() {
+		tableSnapshot = counter.snapshotOfStemCountTable();
+		totalStemsSnapshot = counter.snapshotOfStemCountsByFile();
+	}
 
 	@Override
 	public void searchStemCounter() throws IOException {
-		/*
-		private RowSortedTable<String, String, Integer> stemCountTableSnapshot;
-		
-		private Map<String, Integer> totalStemsByFileNameSnapshot;
-		*/
-		
-		RowSortedTable<String, String, Integer> tableSnapshot = counter.snapshotOfStemCountTable();
-		Map<String, Integer> totalStemsSnapshot = counter.snapshotOfStemCountsByFile();
-		
 		try (BufferedReader reader = Files.newBufferedReader(queries)) {
+			updateStemCounterSnapshots();
+			if (tableSnapshot == null || totalStemsSnapshot == null) {
+				System.err.println("shouldn't really run");
+				return;
+			}
 			reader.lines()
 				.map(this::safeUniqueStems)
 				.filter(stems -> !stems.isEmpty())
-				.forEach(queryStems -> search(queryStems, tableSnapshot, totalStemsSnapshot));
+				.forEach(this::search);
 		}
 	}
 	
+	/**
+	 * Utility method for getting unique stems from a text line stemmer, since there should never,
+	 * ever be an IOException when stemming just a text line
+	 * @param line
+	 * @return a collection of unique stems, processed from a text line
+	 */
 	private Collection<String> safeUniqueStems(String line) {
 		try {
 			return stemmer.uniqueStems(line);
@@ -78,36 +94,56 @@ public class SimpleStemCounterSearcher implements StemCounterSearcher {
 		}
 	}
 	
-	// TODO: add extra args
-	private void search(
-			Collection<String> queryStems,
-			RowSortedTable<String, String, Integer> tableSnapshot,
-			Map<String, Integer> totalStemsSnapshot) {
+	/**
+	 * Searches the stem counter and adds the search results into the search result index
+	 * @param queryStems collection of query stems
+	 * @param tableSnapshot snapshot of the StemCounterTable
+	 * @param totalStemsSnapshot snapshot of the stem counts by file name
+	 */
+	private void search(Collection<String> queryStems) {
 		String queryAsLine = queryStems.toString().replaceAll(BRACKET_AND_COMMA_REGEX, "");
-		List<SearchResult> results = tableSnapshot.columnMap().entrySet().stream()
-			.map(entry -> mapSnapshotEntryToResult(entry, queryStems, totalStemsSnapshot))
+		Collection<SearchResult> results = tableSnapshot.columnMap().entrySet().stream()
+			.map(entry -> mapSnapshotEntryToResult(entry, queryStems))
 			.filter(result -> result != null)
 			.collect(Collectors.toList());
 		index.addAll(queryAsLine, results);
 	}
 	
-	private SearchResult mapSnapshotEntryToResult(Map.Entry<String, Map<String, Integer>> snapshotEntry, Collection<String> queryStems,
-			Map<String, Integer> totalStemsSnapshot) {
-		String fileName = snapshotEntry.getKey();
-		Number matches = snapshotEntry.getValue().entrySet().stream()
+	/**
+	 * Converts a table snapshot entry into a search result, using a collection of query stems
+	 * @param tableSnapshotEntry table snapshot entry
+	 * @param queryStems query stems
+	 * @return the Search Result from searching the stem counter's snapshots with the given query
+	 * stems
+	 */
+	private SearchResult mapSnapshotEntryToResult(
+			Map.Entry<String, Map<String, Integer>> tableSnapshotEntry, Collection<String> queryStems) {
+		String fileName = tableSnapshotEntry.getKey();
+		Number matches = tableSnapshotEntry.getValue().entrySet().stream()
 				.mapToInt(entry -> numberOfMatches(entry, queryStems))
 				.sum();
 		Number stemCount = totalStemsSnapshot.getOrDefault(fileName, 0);
 		return SearchResultFactory.create(fileName, matches, stemCount);
 	}
 	
-	int numberOfMatches(
-			Map.Entry<String, Integer> entry,
-			Collection<String> queryStems) {
-		Integer stemCount = entry.getValue();
-		if (stemCount == null) {
-			return 0;
-		}
+	/**
+	 * Gets the number of matches that a given snapshot entry has for a given collection of query
+	 * stems. Here, the number of matches is defined as the stem count in the entry times the number
+	 * of matching stems in query stems, based on the given stem matching strategy.
+	 * 
+	 * For example, if our strategy is to look for an exact match (e.g. (a, b) -> (a.equals(b))),
+	 * and our entry is "bubba"/4 (as in there are 4 instances of the stem "bubba"), and our query stems 
+	 * is ["bubba"], then we would have entry.getValue() * numberOfMatchingQueryStems = 4 * 1 = 4 matches
+	 * 
+	 * If our strategy is to look for a partial match (e.g. (a, b) -> a.startsWith(b), and our entry is
+	 * "ab"/4, and our query stems is ["ab", "aba", "baz"], then we would have
+	 * entry.getValue() * numberOfMatchingQueryStems = 4 * 2 = 8 matches
+	 * @param entry tableSnapshot entry
+	 * @param queryStems query stems
+	 * @return the number of matches that a given snapshot entry has for the query stems
+	 */
+	private int numberOfMatches(Map.Entry<String, Integer> entry, Collection<String> queryStems) {
+		Integer stemCount = Optional.ofNullable(entry.getValue()).orElse(0);
 		int numberOfMatchingQueryStems = (int)queryStems.stream()
 			.filter(stem -> stemMatchingStrategy.stemsMatch(entry.getKey(), stem))
 			.count();

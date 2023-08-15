@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import data.search_result_indexing.SearchResultIndex;
-import data.search_result_indexing.SearchResultIndex.SearchResult;
+import models.search_result_indexing.SearchResultIndex;
+import models.search_result_indexing.SearchResultIndex.SearchResult;
 import views.GenericTextFileView;
 
-public class TextFileSearchResultIndexController
-	implements SearchResultIndexController {
+/**
+ * An implementation of the search result index controller for text files
+ * @author JRRed
+ *
+ */
+public class TextFileSearchResultIndexController implements SearchResultIndexController {
 	
 	private SearchResultIndex model;
 	
@@ -34,7 +38,6 @@ public class TextFileSearchResultIndexController
 			System.err.println("This should NEVER run - textfilesearchresultindexcontroller");
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

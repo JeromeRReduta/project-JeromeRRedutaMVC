@@ -1,4 +1,4 @@
-package data.stem_indexing;
+package models.stem_indexing;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -6,27 +6,30 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeSet;
 
-import data.AbstractStringKeyTable;
-import data.SearchEngineStringKeyTable;
 import json.JsonCollectionWriter;
 import json.JsonTableWriter;
+import models.AbstractStringKeyTable;
+import models.SearchEngineStringKeyTable;
 
+/**
+ * Table-based InvertedIndex With Snapshot implementation
+ * @author JRRed
+ *
+ */
 public class InvertedIndexTable 
 	extends AbstractStringKeyTable<TreeSet<Integer>>
 	implements InvertedIndexWithSnapshot {
 
-	public InvertedIndexTable() {
-	}
+	public InvertedIndexTable() {}
 
 	@Override
 	public SearchEngineStringKeyTable<TreeSet<Integer>> snapshot() {
 		InvertedIndexTable clone = new InvertedIndexTable();
-		cellSet().forEach(cell -> {
-			clone.put(
+		cellSet().forEach(cell -> clone.put(
 					cell.getRowKey(),
 					cell.getColumnKey(),
-					new TreeSet<>(cell.getValue())); // we make a new treeset to preserve data integrity
-		});
+					new TreeSet<>(cell.getValue())) // we make a new treeset to preserve data integrity
+		);
 		return clone;
 	}
 
@@ -50,8 +53,7 @@ public class InvertedIndexTable
 
 	@Override
 	public void writeToJson(int baseIndent, Writer writer) throws IOException {
-		JsonTableWriter<String, String, TreeSet<Integer>> tableWriter
-			= JsonCollectionWriter::writeCollection;
+		JsonTableWriter<String, String, TreeSet<Integer>> tableWriter = JsonCollectionWriter::writeCollection;
 		tableWriter.writeAllElements(baseIndent, writer, backingTable);
 	}
 }

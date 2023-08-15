@@ -1,4 +1,4 @@
-package data.stem_indexing;
+package models.stem_indexing;
 
 import java.util.Collection;
 import java.util.Map;

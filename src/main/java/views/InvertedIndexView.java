@@ -3,11 +3,12 @@ package views;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import data.stem_indexing.InvertedIndex;
 import json.JsonWriteable;
+import models.stem_indexing.InvertedIndex;
 
 /**
  * Implementation of DataToTextFileView, for displaying an InvertedIndex
+ * @deprecated We use GenericTextFileView now
  * @author JRRed
  *
  */

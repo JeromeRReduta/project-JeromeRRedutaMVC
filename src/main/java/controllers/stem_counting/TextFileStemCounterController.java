@@ -5,18 +5,21 @@ import java.util.Map;
 
 import com.google.common.collect.RowSortedTable;
 
-import data.stem_counting.StemCounter;
+import models.stem_counting.StemCounter;
 import views.GenericTextFileView;
 
-public class TextFileStemCounterController
-	implements StemCounterController {
+/**
+ * An implementation of the stem counter controller for text files
+ * @author JRRed
+ *
+ */
+public class TextFileStemCounterController implements StemCounterController {
 	
 	private StemCounter model;
 	
 	private GenericTextFileView<StemCounter> view;
 	
-	public TextFileStemCounterController(
-			StemCounter model, GenericTextFileView<StemCounter> view) {
+	public TextFileStemCounterController(StemCounter model, GenericTextFileView<StemCounter> view) {
 		this.model = model;
 		this.view = view;
 	}
