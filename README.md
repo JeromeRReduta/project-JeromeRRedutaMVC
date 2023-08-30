@@ -1,6 +1,6 @@
-#Refactored Search Engine, MVC version
+# Refactored Search Engine, MVC version
 
-##Project 2 - Search Engine
+## Project 2 - Search Engine
 Now that we have somewhere to store our stems, we can build a system
 that can search for specific stems. For this project, I had to build a
 system that:
@@ -23,7 +23,9 @@ It also has to maintain the previous project's functionality:
 into an inverted index.
 
 
-##Inputs:
+## Inputs:
+
+
 New flags:  
 -counts (file): If this is present, we want to output the stem counter's data to (file).  
 -queries (file): If this is present, we want to search the stem counter using the query file (file).  
@@ -34,7 +36,9 @@ We also want to maintain the old flags:
 -text (file): If this is present, we want to process stems from (file) and store them into an inverted index.  
 -index (file): If this is present, we want to output the inverted index's data to (file).  
  
-##Outputs:
+## Outputs:
+
+
 We can now output the following data upon request:  
 SearchResultIndex data - a collection of sorted search results  
 StemCounter data - a map that tracks how many stems each file has. Note that this is merely a view of the stem counter, and not the complete data as-is.  
@@ -42,7 +46,7 @@ StemCounter data - a map that tracks how many stems each file has. Note that thi
 We are also still able to output Project 1 data structures upon request:  
 InvertedIndex data - a collection of all the stem / file name / list of positions triplets in the index
 
-##Changes:
+## Changes:
 
 We've moved from separate views for each data structure to having a GenericTextFileView used
 for everything. This is because after building on the project, we use the exact same logic
