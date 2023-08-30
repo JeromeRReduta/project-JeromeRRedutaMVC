@@ -61,7 +61,7 @@ search result index settings.
 We moved a bunch of files around. We've organized most of the files into a models package,
 a views package, a controllers package, and a data reading package.
 
-##Snapshotting:
+##  Snapshotting:
 
 An crucial feature of this project is the ability for data models to take a copy of
 their current state (i.e. a "snapshot"). This lets us keep data integrity
@@ -69,6 +69,6 @@ for the original models, and have a copy of the data we can mess with as much as
 The demerit is that making that copy is an expensive operation, so I would recommend using it
 lightly.
 
-##CRC Model
+##  CRC Model
 
 Right [here](https://lucid.app/lucidchart/a3c457f3-5b28-4172-9d3b-f2bf5515a6cf/edit?page=0_0&invitationId=inv_849033f1-ca31-489e-83a4-557c8ff5fdb3#).
